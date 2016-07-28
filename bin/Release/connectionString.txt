@@ -1,0 +1,2 @@
+Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=KIMLicense;Data Source=laptop\sqlexpress
+

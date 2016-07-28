@@ -1,0 +1,70 @@
+28/06/2009 3:16:17 AM    Database Only
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:16:20 AM    Object reference not set to an instance of an object.
+28/06/2009 3:17:28 AM    Database Only
+28/06/2009 3:20:49 AM    Database Only
+28/06/2009 3:31:22 AM    Database Only
+28/06/2009 3:33:28 AM    Database and Values
+28/06/2009 3:33:34 AM    Empty Table
+28/06/2009 3:33:35 AM    Empty Table
+28/06/2009 3:35:48 AM    Database Only
+28/06/2009 3:36:01 AM    Database and Values
+28/06/2009 3:36:03 AM    Empty Table
+28/06/2009 3:36:04 AM    Empty Table
+15/07/2009 12:06:12 PM    ConnectionString = Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=acnicholls;Data Source=XPSM1530\SQLEXPRESS
+15/07/2009 12:06:40 PM    Table and Values
+15/07/2009 12:12:21 PM    Table Only
+15/07/2009 12:12:26 PM    Cannot find table 6.
+15/07/2009 12:13:48 PM    Table Only
+15/07/2009 12:14:39 PM    Table Only
+15/07/2009 12:14:50 PM    Table Only
+15/07/2009 12:15:31 PM    Table Only
+15/07/2009 12:15:44 PM    Table Only
+15/07/2009 12:16:07 PM    Table Only
+15/07/2009 12:16:07 PM    Cannot find table 6.
+15/07/2009 12:16:26 PM    Table Only
+15/07/2009 12:22:47 PM    Table and Values
+11/29/2009 10:57:41 PM    ConnectionString = Provider=SQLNCLI.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=WorkExpPosting;Data Source=xpsm1530\sqlexpress
+11/29/2009 10:57:42 PM    Error Loading Data...
+
+11/29/2009 10:57:42 PM    Not allowed to change the 'ConnectionString' property while the connection (state=Open).
+11/29/2009 10:58:16 PM    Database and Values
+11/29/2009 10:58:21 PM    Empty Table
+11/29/2009 10:58:22 PM    Empty Table
+01/28/2010 2:06:15 PM    ConnectionString = Provider=SQLNCLI.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=acnicholls;Data Source=(local)\SQLEXPRESS
+01/28/2010 2:06:16 PM    Error Loading Data...
+
+01/28/2010 2:06:16 PM    Not allowed to change the 'ConnectionString' property while the connection (state=Open).
+01/29/2010 12:29:02 AM    Values Only
+01/29/2010 12:29:20 AM    Values Only
+01/29/2010 12:29:38 AM    Values Only
+01/29/2010 12:29:52 AM    Values Only
+10/03/2010 9:03:23 AM    Table and Values
+10/03/2010 9:04:12 AM    Database Only
+10/03/2010 9:04:56 AM    Database and Values
+10/03/2010 9:04:59 AM    Empty Table
+10/03/2010 9:05:00 AM    Empty Table
+10/03/2010 9:05:01 AM    Empty Table
+10/03/2010 9:05:02 AM    Empty Table
+11/16/2010 2:20:26 PM    ConnectionString = Provider=SQLNCLI.1;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=acnicholls;Data Source=XPSM1530\SQLEXPRESS
+11/16/2010 2:21:32 PM    Database and Values
+11/16/2010 2:21:35 PM    Empty Table
+11/16/2010 2:21:36 PM    Empty Table
+11/16/2010 2:21:37 PM    Empty Table
+11/16/2010 2:21:37 PM    Empty Table
+11/16/2010 2:21:38 PM    Empty Table
+11/16/2010 2:21:39 PM    Empty Table
+11/16/2010 2:21:39 PM    Empty Table
+11/16/2010 2:21:40 PM    Empty Table
+11/16/2010 2:21:41 PM    Empty Table
+11/16/2010 2:21:42 PM    Empty Table
+11/16/2010 2:21:42 PM    Empty Table
+11/16/2010 2:28:08 PM    Empty Table

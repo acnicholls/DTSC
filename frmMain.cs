@@ -339,7 +339,7 @@ namespace DBTableMover
 				{
 					MenuItem itemClicked = (MenuItem)sender;
 					string tableName = itemClicked.Text.ToString();
-
+// TODO: dsTable is a new dataset.  we need to fill it first
 					DataTable gridTable = dsTable.Tables[tableName];
 
 					this.dataGrid1.DataSource = gridTable;
@@ -691,6 +691,7 @@ namespace DBTableMover
 				{
 					string fileName = ofGetXML.FileName;
 					dsTable = xmlFun.OpenXmlToDataSet(fileName);
+                    // TODO: need to save the XML filename to a variable, so other parts of the project can use it.  Since we're clearing dsTable every once in a while.
 					this.dataGrid1.DataSource = null;
 					this.miTables.MenuItems.Clear();
 					int x = 0;

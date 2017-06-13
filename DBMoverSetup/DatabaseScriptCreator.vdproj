@@ -1,7 +1,7 @@
 "DeployProject"
 {
-"VSVersion" = "3:701"
-"ProjectType" = "8:{2C2AF0D9-9B47-4FE5-BEF2-169778172667}"
+"VSVersion" = "3:800"
+"ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:DatabaseTableScriptCreatorInstaller"
 "LanguageId" = "3:1033"
@@ -17,24 +17,6 @@
         {
         "MsmKey" = "8:_13ABC4D3ED6A4032A3CE2468D9A84481"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_51D4C611F4AE48539021A987A861C133"
-        "OwnerKey" = "8:_862806C014CD96AB12C6DDB1515F3311"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_51D4C611F4AE48539021A987A861C133"
-        "OwnerKey" = "8:_13ABC4D3ED6A4032A3CE2468D9A84481"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_51D4C611F4AE48539021A987A861C133"
-        "OwnerKey" = "8:_72523A96125C2AAAFE81493CCC4D81C6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -67,6 +49,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:1"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:FALSE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -83,6 +73,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:1"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:FALSE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -100,32 +98,26 @@
         {
             "LaunchCondition"
             {
-                "{2522A265-4974-4402-83C5-3B575A2E935A}:_FCF0330729EB44CF8845F744F4594A4D"
+                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_FCF0330729EB44CF8845F744F4594A4D"
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "SupportedRuntimes" = "8:1.1.4322"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.5"
+                "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=9832"
+                "SupportedRuntimes" = "8:1.1.4322"
                 }
             }
         }
-        "Feature"
-        {
-        }
         "File"
         {
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_72523A96125C2AAAFE81493CCC4D81C6"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_72523A96125C2AAAFE81493CCC4D81C6"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Interop.MSDASC, Version=1.0.0.0, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_72523A96125C2AAAFE81493CCC4D81C6"
-                    {
-                    "Name" = "8:Interop.MSDASC.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Interop.MSDASC.dll"
             "TargetName" = "8:"
@@ -145,18 +137,13 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{FB480208-1853-44D0-9ABD-A3B734C3FAAA}:_862806C014CD96AB12C6DDB1515F3311"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_862806C014CD96AB12C6DDB1515F3311"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Interop.ADODB, Version=2.8.0.0, Culture=neutral"
                 "ScatterAssemblies"
                 {
-                    "_862806C014CD96AB12C6DDB1515F3311"
-                    {
-                    "Name" = "8:Interop.ADODB.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:Interop.ADODB.dll"
             "TargetName" = "8:"
@@ -182,7 +169,7 @@
         }
         "Folder"
         {
-            "{78BAF5CE-F2E5-45BE-83BC-DB6AF387E941}:_38D20E58E0334909922D419515563AF5"
+            "{1525181F-901A-416C-8A58-119130FE478E}:_38D20E58E0334909922D419515563AF5"
             {
             "Name" = "8:#1916"
             "AlwaysCreate" = "11:FALSE"
@@ -193,7 +180,7 @@
                 {
                 }
             }
-            "{58C0ADA3-3CEA-43BD-A3B3-2EA121BC8217}:_54642EEDE5E340F6AD21FDEBB22422BD"
+            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_54642EEDE5E340F6AD21FDEBB22422BD"
             {
             "DefaultLocation" = "8:[ProgramFilesFolder]\\[ProductName]"
             "Name" = "8:#1925"
@@ -203,7 +190,7 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{F27BD5C5-A65D-4608-96D4-7C5DA1F76302}:_4910F49EC87447DB895B0C0721223D25"
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_4910F49EC87447DB895B0C0721223D25"
                     {
                     "Name" = "8:Database Table Script Creator"
                     "AlwaysCreate" = "11:FALSE"
@@ -216,7 +203,7 @@
                     }
                 }
             }
-            "{78BAF5CE-F2E5-45BE-83BC-DB6AF387E941}:_60C69E7668974FF6A916D8BE2EFCCBA0"
+            "{1525181F-901A-416C-8A58-119130FE478E}:_60C69E7668974FF6A916D8BE2EFCCBA0"
             {
             "Name" = "8:#1919"
             "AlwaysCreate" = "11:FALSE"
@@ -225,7 +212,7 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
-                    "{F27BD5C5-A65D-4608-96D4-7C5DA1F76302}:_2609EDFBBF6248E187787B7C85CB3F17"
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_2609EDFBBF6248E187787B7C85CB3F17"
                     {
                     "Name" = "8:Database Table Script Creator"
                     "AlwaysCreate" = "11:FALSE"
@@ -248,6 +235,7 @@
         "MsiBootstrapper"
         {
         "LangId" = "3:1033"
+        "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
@@ -256,9 +244,11 @@
         "ProductCode" = "8:{4764B1AA-5E01-4008-A992-07ED530736E8}"
         "PackageCode" = "8:{0AEFB68E-F838-49DA-B31C-AF354AA019A7}"
         "UpgradeCode" = "8:{4980EC85-A3D1-4297-A614-24A242403E04}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
+        "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.3.0"
         "Manufacturer" = "8:acnicholls.com"
         "ARPHELPTELEPHONE" = "8:"
@@ -273,6 +263,10 @@
         "ARPIconIndex" = "3:32512"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
+        "TargetPlatform" = "3:0"
+        "PreBuildEvent" = "8:"
+        "PostBuildEvent" = "8:"
+        "RunPostBuildEvent" = "3:0"
         }
         "Registry"
         {
@@ -280,7 +274,7 @@
             {
                 "Keys"
                 {
-                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_FE45A5C3455A4790B30A50122CFACAAC"
+                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_FE45A5C3455A4790B30A50122CFACAAC"
                     {
                     "Name" = "8:Software"
                     "Condition" = "8:"
@@ -289,7 +283,7 @@
                     "Transitive" = "11:FALSE"
                         "Keys"
                         {
-                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_9B935B8E32F64E308BB246815F60C706"
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_9B935B8E32F64E308BB246815F60C706"
                             {
                             "Name" = "8:[Manufacturer]"
                             "Condition" = "8:"
@@ -314,7 +308,7 @@
             {
                 "Keys"
                 {
-                    "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_98827BE054A54E25A6961CF993E8A5F3"
+                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_98827BE054A54E25A6961CF993E8A5F3"
                     {
                     "Name" = "8:Software"
                     "Condition" = "8:"
@@ -323,7 +317,7 @@
                     "Transitive" = "11:FALSE"
                         "Keys"
                         {
-                            "{6A471EEF-D31B-40F8-BCF6-C9E8EC783F36}:_F71C6A2007F54EE28B4503BED9D2AF70"
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_F71C6A2007F54EE28B4503BED9D2AF70"
                             {
                             "Name" = "8:[Manufacturer]"
                             "Condition" = "8:"
@@ -368,7 +362,7 @@
         }
         "Shortcut"
         {
-            "{478F747B-8505-45D1-9AAE-8C3B645C26E3}:_E987CDFBF4C647FFAC2E8B664C11F844"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E987CDFBF4C647FFAC2E8B664C11F844"
             {
             "Name" = "8:Database Table Script Creator"
             "Arguments" = "8:"
@@ -385,14 +379,14 @@
         }
         "UserInterface"
         {
-            "{8D9DEE8B-DD8B-4F48-9072-C4364E4F4011}:_27871415ACC0445F8463C056F86C2741"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_27871415ACC0445F8463C056F86C2741"
             {
             "Name" = "8:#1900"
             "Sequence" = "3:2"
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_13DCC20681BB4178B9FF8E56F8FBB955"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_13DCC20681BB4178B9FF8E56F8FBB955"
                     {
                     "Sequence" = "3:200"
                     "DisplayName" = "8:Installation Folder"
@@ -414,7 +408,7 @@
                             }
                         }
                     }
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_288B1C89FD9C4201AB7E9FA19BC9D27D"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_288B1C89FD9C4201AB7E9FA19BC9D27D"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Welcome"
@@ -462,7 +456,7 @@
                             }
                         }
                     }
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_8BE4F823934F49C7B9C3DAD476AB8D26"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_8BE4F823934F49C7B9C3DAD476AB8D26"
                     {
                     "Sequence" = "3:300"
                     "DisplayName" = "8:Confirm Installation"
@@ -486,14 +480,14 @@
                     }
                 }
             }
-            "{8D9DEE8B-DD8B-4F48-9072-C4364E4F4011}:_5FC5A5F8CC91470088CE3B2F496B0858"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_5FC5A5F8CC91470088CE3B2F496B0858"
             {
             "Name" = "8:#1902"
             "Sequence" = "3:1"
             "Attributes" = "3:3"
                 "Dialogs"
                 {
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_90164FBE4DB34582B2484AC2CEF95804"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_90164FBE4DB34582B2484AC2CEF95804"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Finished"
@@ -530,26 +524,26 @@
                     }
                 }
             }
-            "{B654A020-6903-4E6A-A86C-75DC463DB54B}:_76A49B904F02403CA8A116586C1F483A"
+            "{2479F3F5-0309-486D-8047-8187E2CE5BA0}:_76A49B904F02403CA8A116586C1F483A"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "SourcePath" = "8:<VsdDialogDir>\\VsdUserInterface.wim"
             }
-            "{B654A020-6903-4E6A-A86C-75DC463DB54B}:_7F07DE70290C478EAE9F24E827A76352"
+            "{2479F3F5-0309-486D-8047-8187E2CE5BA0}:_7F07DE70290C478EAE9F24E827A76352"
             {
             "UseDynamicProperties" = "11:FALSE"
             "IsDependency" = "11:FALSE"
             "SourcePath" = "8:<VsdDialogDir>\\VsdBasicDialogs.wim"
             }
-            "{8D9DEE8B-DD8B-4F48-9072-C4364E4F4011}:_855C95D0C9064A2C861CC54D9A402A6C"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_855C95D0C9064A2C861CC54D9A402A6C"
             {
             "Name" = "8:#1902"
             "Sequence" = "3:2"
             "Attributes" = "3:3"
                 "Dialogs"
                 {
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_8D0026E4246748EAB4ABED27A0AE84FC"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_8D0026E4246748EAB4ABED27A0AE84FC"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Finished"
@@ -573,14 +567,14 @@
                     }
                 }
             }
-            "{8D9DEE8B-DD8B-4F48-9072-C4364E4F4011}:_9C06981F076E4F42975418A0574A168E"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_9C06981F076E4F42975418A0574A168E"
             {
             "Name" = "8:#1901"
             "Sequence" = "3:2"
             "Attributes" = "3:2"
                 "Dialogs"
                 {
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_C88DD4724EFF47708485B2EB16B9BC46"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_C88DD4724EFF47708485B2EB16B9BC46"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Progress"
@@ -617,14 +611,14 @@
                     }
                 }
             }
-            "{8D9DEE8B-DD8B-4F48-9072-C4364E4F4011}:_E6428BBD575844A9BE0354AA51FBAF9D"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_E6428BBD575844A9BE0354AA51FBAF9D"
             {
             "Name" = "8:#1901"
             "Sequence" = "3:1"
             "Attributes" = "3:2"
                 "Dialogs"
                 {
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_D2833029E5B84BD8AAE3E16E9FEEB031"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_D2833029E5B84BD8AAE3E16E9FEEB031"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Progress"
@@ -661,14 +655,14 @@
                     }
                 }
             }
-            "{8D9DEE8B-DD8B-4F48-9072-C4364E4F4011}:_F77C2723B60546BBA0BDCE9CBD9AA8DE"
+            "{DF760B10-853B-4699-99F2-AFF7185B4A62}:_F77C2723B60546BBA0BDCE9CBD9AA8DE"
             {
             "Name" = "8:#1900"
             "Sequence" = "3:1"
             "Attributes" = "3:1"
                 "Dialogs"
                 {
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_28A89DA5064544DA86433B02306E5E35"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_28A89DA5064544DA86433B02306E5E35"
                     {
                     "Sequence" = "3:100"
                     "DisplayName" = "8:Welcome"
@@ -716,7 +710,7 @@
                             }
                         }
                     }
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_2BFD3AC5D1A744328FF17AAD2870FB50"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_2BFD3AC5D1A744328FF17AAD2870FB50"
                     {
                     "Sequence" = "3:300"
                     "DisplayName" = "8:Confirm Installation"
@@ -738,7 +732,7 @@
                             }
                         }
                     }
-                    "{18ADD6EC-89FE-4ED7-AD3E-211C40278470}:_F7C39B142ACB4EB49149E2EC85A92F68"
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_F7C39B142ACB4EB49149E2EC85A92F68"
                     {
                     "Sequence" = "3:200"
                     "DisplayName" = "8:Installation Folder"
@@ -758,6 +752,19 @@
                             "Setting" = "3:1"
                             "UsePlugInResources" = "11:TRUE"
                             }
+                            "InstallAllUsersVisible"
+                            {
+                            "Name" = "8:InstallAllUsersVisible"
+                            "DisplayName" = "8:#1059"
+                            "Description" = "8:#1159"
+                            "Type" = "3:5"
+                            "ContextData" = "8:1;True=1;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:1"
+                            "DefaultValue" = "3:1"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
                         }
                     }
                 }
@@ -765,24 +772,10 @@
         }
         "MergeModule"
         {
-            "{35A69C6E-5BA4-440D-803D-762B59A45393}:_51D4C611F4AE48539021A987A861C133"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:dotnetfxredist_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:1033"
-            "Exclude" = "11:TRUE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
         }
         "ProjectOutput"
         {
-            "{8062640A-2EEE-46E9-AB67-688E9A886E9F}:_13ABC4D3ED6A4032A3CE2468D9A84481"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_13ABC4D3ED6A4032A3CE2468D9A84481"
             {
             "SourcePath" = "8:..\\obj\\Debug\\dtsc.exe"
             "TargetName" = "8:"
@@ -810,9 +803,6 @@
                 {
                 }
             }
-        }
-        "VJSharpPlugin"
-        {
         }
     }
 }

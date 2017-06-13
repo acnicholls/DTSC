@@ -1,59 +1,27 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTableScriptCreator", "DatabaseTableScriptCreator.csproj", "{D603BC53-B58A-4894-864C-A266CEB428CE}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DatabaseTableScriptCreatorInstaller", "DBMoverSetup\DatabaseScriptCreator.vdproj", "{F069400B-1338-4548-A520-45CCA007279A}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTSCPortal", "http://localhost/DTSCPortal/DTSCPortal.csproj", "{01176338-6663-4D55-BB13-D5145CB77880}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 4
-		SccProjectName0 = \u0022$/DTSC/DBTABLEMOVER\u0022,\u0020LCFAAAAA
-		SccLocalPath0 = .
-		SccProvider0 = MSSCCI:Microsoft\u0020Visual\u0020SourceSafe
-		CanCheckoutShared = false
-		SolutionUniqueID = {1F3DC425-A1E2-4A58-A97C-8A42E066138D}
-		SccProjectUniqueName1 = DatabaseTableScriptCreator.csproj
-		SccLocalPath1 = .
-		CanCheckoutShared = false
-		SccProjectUniqueName2 = DBMoverSetup\\DatabaseScriptCreator.vdproj
-		SccProjectName2 = \u0022$/DTSC/DBTABLEMOVER/DBMoverSetup\u0022,\u0020EDFAAAAA
-		SccLocalPath2 = DBMoverSetup
-		CanCheckoutShared = false
-		SccProjectUniqueName3 = http://localhost/DTSCPortal/DTSCPortal.csproj
-		SccProjectName3 = \u0022$/DTSC/DTSCPortal\u0022,\u0020FVPAAAAA
-		SccLocalPath3 = C:\\inetpub\\wwwroot\\DTSCPortal
-		CanCheckoutShared = false
-		SccProjectEnlistmentChoice3 = 2
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D603BC53-B58A-4894-864C-A266CEB428CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D603BC53-B58A-4894-864C-A266CEB428CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D603BC53-B58A-4894-864C-A266CEB428CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D603BC53-B58A-4894-864C-A266CEB428CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F069400B-1338-4548-A520-45CCA007279A}.Debug|Any CPU.ActiveCfg = Debug
+		{F069400B-1338-4548-A520-45CCA007279A}.Debug|Any CPU.Build.0 = Debug
+		{F069400B-1338-4548-A520-45CCA007279A}.Release|Any CPU.ActiveCfg = Release
+		{F069400B-1338-4548-A520-45CCA007279A}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
-	GlobalSection(ProjectDependencies) = postSolution
-	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{D603BC53-B58A-4894-864C-A266CEB428CE}.Debug.ActiveCfg = Debug|.NET
-		{D603BC53-B58A-4894-864C-A266CEB428CE}.Debug.Build.0 = Debug|.NET
-		{D603BC53-B58A-4894-864C-A266CEB428CE}.Release.ActiveCfg = Release|.NET
-		{D603BC53-B58A-4894-864C-A266CEB428CE}.Release.Build.0 = Release|.NET
-		{F069400B-1338-4548-A520-45CCA007279A}.Debug.ActiveCfg = Debug
-		{F069400B-1338-4548-A520-45CCA007279A}.Debug.Build.0 = Debug
-		{F069400B-1338-4548-A520-45CCA007279A}.Release.ActiveCfg = Release
-		{F069400B-1338-4548-A520-45CCA007279A}.Release.Build.0 = Release
-		{01176338-6663-4D55-BB13-D5145CB77880}.Debug.ActiveCfg = Debug|.NET
-		{01176338-6663-4D55-BB13-D5145CB77880}.Debug.Build.0 = Debug|.NET
-		{01176338-6663-4D55-BB13-D5145CB77880}.Release.ActiveCfg = Release|.NET
-		{01176338-6663-4D55-BB13-D5145CB77880}.Release.Build.0 = Release|.NET
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

@@ -24,20 +24,20 @@ namespace DBTableMover
 
 		public DataSet OpenXmlToDataSet(string newFileName)
 		{
-			FileInfo file = new FileInfo(newFileName);
-			if(file.Extension.ToLower() == ".xml")
-			{
-				FileStream XMLFILE = new FileStream(newFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-				xmlData.ReadXml(XMLFILE);
-				XMLFILE.Close();
-			}
-			if(file.Extension.ToLower() == ".xsd")
-			{
-				FileStream XMLFILE = new FileStream(newFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-				xmlData.ReadXmlSchema(XMLFILE);
-				XMLFILE.Close();
-			}
-			return xmlData;
+                FileInfo file = new FileInfo(newFileName);
+                if (file.Extension.ToLower() == ".xml")
+                {
+                    FileStream XMLFILE = new FileStream(newFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    xmlData.ReadXml(XMLFILE);
+                    XMLFILE.Close();
+                }
+                if (file.Extension.ToLower() == ".xsd")
+                {
+                    FileStream XMLFILE = new FileStream(newFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    xmlData.ReadXmlSchema(XMLFILE);
+                    XMLFILE.Close();
+                }
+                return xmlData;
 		}
 
 		public string CreateTableScript(string fileName, string tableName)

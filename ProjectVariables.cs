@@ -18,12 +18,19 @@ namespace DBTableMover
 			// TODO: Add constructor logic here
 			//
 		}
-		public ProjectVariables(bool debug)
+		public ProjectVariables(bool debugValue)
 		{
 			//
 			// TODO: Add constructor logic here
 			//
-			debug = true;
+			debug = debugValue;
 		}
+
+        private string currentXMLFile;
+        public string CurrentXMLFileName
+        {
+            get { return currentXMLFile; }
+            set { currentXMLFile = value; }
+        }
 	}
 }

@@ -34,10 +34,14 @@ namespace DBTableMover
         /// <param name="message">the message to write</param>
         public static void WriteLog(string caller, string message)
         {
-            StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt", true);
-            logFile.WriteLine(DateTime.Now + "    " + caller + "    " + message);
-            logFile.Flush();
-            logFile.Close();
+            if (ProjectVariables.debugMode)
+            {
+// only write to the log, if the debug mode is on
+                StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt", true);
+                logFile.WriteLine(DateTime.Now + "    " + caller + "    " + message);
+                logFile.Flush();
+                logFile.Close();
+            }
         }
     }
 }

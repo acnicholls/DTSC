@@ -31,7 +31,7 @@ namespace DBTableMover
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem miAbout;
         private System.Windows.Forms.MenuItem miXmlConnection;
-        private System.Windows.Forms.OpenFileDialog ofGetXML; 
+        private System.Windows.Forms.OpenFileDialog ofGetXML;
 
         public static string ConnectionString = "";
         private ProjectInfo inf = new ProjectInfo();
@@ -39,12 +39,7 @@ namespace DBTableMover
         private string tableScript = "";
         private string valueScript = "";
         private currentConnectionType currentConType;
-        private ProjectVariables projVars;
-
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
-        private System.ComponentModel.Container components = null;
+        private System.ComponentModel.IContainer components;
 
         /// <summary>
         /// main constructor
@@ -83,8 +78,9 @@ namespace DBTableMover
         /// </summary>
         private void InitializeComponent()
         {
-            System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(frmMain));
-            this.mmMain = new System.Windows.Forms.MainMenu();
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            this.mmMain = new System.Windows.Forms.MainMenu(this.components);
             this.miMain = new System.Windows.Forms.MenuItem();
             this.miExit = new System.Windows.Forms.MenuItem();
             this.miOptions = new System.Windows.Forms.MenuItem();
@@ -107,16 +103,16 @@ namespace DBTableMover
             // mmMain
             // 
             this.mmMain.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-                                                                                   this.miMain,
-                                                                                   this.miOptions,
-                                                                                   this.miTables,
-                                                                                   this.menuItem1});
+            this.miMain,
+            this.miOptions,
+            this.miTables,
+            this.menuItem1});
             // 
             // miMain
             // 
             this.miMain.Index = 0;
             this.miMain.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-                                                                                   this.miExit});
+            this.miExit});
             this.miMain.Text = "M&ain";
             // 
             // miExit
@@ -129,9 +125,9 @@ namespace DBTableMover
             // 
             this.miOptions.Index = 1;
             this.miOptions.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-                                                                                      this.miDataConnection,
-                                                                                      this.miEditConnection,
-                                                                                      this.miXmlConnection});
+            this.miDataConnection,
+            this.miEditConnection,
+            this.miXmlConnection});
             this.miOptions.Text = "&Data Connection";
             // 
             // miDataConnection
@@ -161,7 +157,7 @@ namespace DBTableMover
             // 
             this.menuItem1.Index = 3;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-                                                                                      this.miAbout});
+            this.miAbout});
             this.menuItem1.Text = "&Help";
             // 
             // miAbout
@@ -189,6 +185,10 @@ namespace DBTableMover
             this.btnCreate.Text = "Create Script >>";
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
+            // conDataConnection
+            // 
+            this.conDataConnection.FireInfoMessageEventOnUserErrors = false;
+            // 
             // sFDPutFile
             // 
             this.sFDPutFile.DefaultExt = "sql";
@@ -199,11 +199,11 @@ namespace DBTableMover
             // 
             this.cboScriptContents.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboScriptContents.Items.AddRange(new object[] {
-                                                                   "Table Only",
-                                                                   "Values Only",
-                                                                   "Table and Values",
-                                                                   "Database Only",
-                                                                   "Database and Values"});
+            "Table Only",
+            "Values Only",
+            "Table and Values",
+            "All Tables Only",
+            "All Tables and Values"});
             this.cboScriptContents.Location = new System.Drawing.Point(400, 336);
             this.cboScriptContents.Name = "cboScriptContents";
             this.cboScriptContents.Size = new System.Drawing.Size(128, 21);
@@ -259,7 +259,6 @@ namespace DBTableMover
         /// <param name="e"></param>
         private void frmMain_Load(object sender, System.EventArgs e)
         {
-            projVars = new ProjectVariables();
             try
             {
                 try
@@ -311,7 +310,7 @@ namespace DBTableMover
             SqlDataAdapter adap = new SqlDataAdapter();
             SqlCommand comm = conDataConnection.CreateCommand();
             comm.CommandType = CommandType.Text;
-            comm.CommandText = ("select * from sysobjects where type = 'U' and name <> 'dtproperties' order by name");
+            comm.CommandText = ("select * from sysobjects where type = 'U' and name <> 'dtproperties' and name <> 'sysdiagrams' order by name");
             adap.SelectCommand = comm;
             adap.Fill(dsTable);
             foreach (DataRow row in dsTable.Tables[0].Rows)
@@ -368,7 +367,7 @@ namespace DBTableMover
                         }
                 }
             }
-            catch(Exception x)
+            catch (Exception x)
             {
                 WriteLog("Error in mnuTables_Click : " + x.Message);
             }
@@ -382,10 +381,7 @@ namespace DBTableMover
         /// <param name="message"></param>
         private void WriteLog(string message)
         {
-            if (projVars.debugMode)
-            {
-                ProjectMethods.WriteLog("frmMain", message);
-            }
+            ProjectMethods.WriteLog("frmMain", message);
         }
 
         /// <summary>
@@ -408,7 +404,7 @@ namespace DBTableMover
                 this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
                 this.conDataConnection.Open();
                 GrabTables();
-                MessageBox.Show("Connected.  Select a table and/or script type to continue.");
+                MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception a)
             {
@@ -419,7 +415,7 @@ namespace DBTableMover
                 this.currentConType = currentConnectionType.MSSQL;
             }
         }
-        
+
         /// <summary>
         /// saves a connection string to the user's registry.  will be loaded automatically each time the program is run.
         /// </summary>
@@ -431,7 +427,7 @@ namespace DBTableMover
             WriteLog("ConnectionString = " + connection);
             string[] provider2 = connection.Split(';');
             // open registry location to save to
-            RegistryKey storage = projVars.RegistryStorage.CreateSubKey(projVars.profileLocation);
+            RegistryKey storage = ProjectVariables.RegistryStorage.CreateSubKey(ProjectVariables.profileLocation);
             foreach (string p in provider2)
             {
                 // if it's the provider string save it to registry
@@ -453,7 +449,7 @@ namespace DBTableMover
         /// <returns>full connectionString</returns>
         private string LoadFullConnectionStringFromRegistry()
         {
-            RegistryKey storage = projVars.RegistryStorage.OpenSubKey(projVars.profileLocation);
+            RegistryKey storage = ProjectVariables.RegistryStorage.OpenSubKey(ProjectVariables.profileLocation);
             string provider = storage.GetValue("Provider").ToString();
             string connection = storage.GetValue("AdapterConnection").ToString();
             return provider + ";" + connection;
@@ -465,7 +461,7 @@ namespace DBTableMover
         /// <returns>connectionString</returns>
         public string LoadAdapterConnectionStringFromRegistry()
         {
-            RegistryKey storage = projVars.RegistryStorage.OpenSubKey(projVars.profileLocation);
+            RegistryKey storage = ProjectVariables.RegistryStorage.OpenSubKey(ProjectVariables.profileLocation);
             string connection = storage.GetValue("AdapterConnection").ToString();
             return connection;
         }
@@ -487,9 +483,9 @@ namespace DBTableMover
         /// uses the DataLinks form to load the current connectionstring and allows the user to modify it
         /// </summary>
         /// <param name="connectionstring"></param>
-        public void ExistingConnection(ref string connectionstring)
+        public bool ExistingConnection(ref string connectionstring)
         {
-
+            bool returnValue = false;
             object _con = new object();
 
             MSDASC.DataLinks _link = new MSDASC.DataLinksClass();
@@ -497,8 +493,16 @@ namespace DBTableMover
             _ado.ConnectionString = connectionstring;
             _con = (object)_ado;
             if (_link.PromptEdit(ref _con))
+            {
                 connectionstring = ((ADODB.Connection)_con).ConnectionString;
-            //WriteLog("Connection String : " + connectionstring);
+                returnValue = true;
+            }
+            else
+            {
+                returnValue = false;
+            }
+            WriteLog("Connection String : " + connectionstring);
+            return returnValue;
         }
 
         /// <summary>
@@ -513,18 +517,20 @@ namespace DBTableMover
             {
                 this.ofGetXML = null;
                 string cd = this.LoadFullConnectionStringFromRegistry();
-                ExistingConnection(ref cd);
-                this.SaveConnectionStringToRegistry(cd);
-                this.conDataConnection.Close();
-                frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
-                this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
-                this.conDataConnection.Open();
-                GrabTables();
-                MessageBox.Show("Connected.  Select a table and/or script type to continue.");
+                if (ExistingConnection(ref cd))
+                {
+                    this.SaveConnectionStringToRegistry(cd);
+                    this.conDataConnection.Close();
+                    frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
+                    this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
+                    this.conDataConnection.Open();
+                    GrabTables();
+                    MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception g)
             {
-                MessageBox.Show("Cannot open connection, please retry.", inf.error);
+                MessageBox.Show("Cannot open connection, please retry.\r\n\r\nError Message: " + g.Message, inf.error);
                 WriteLog("Cannot open new connection:::" + g.Message);
             }
             finally
@@ -556,6 +562,7 @@ namespace DBTableMover
         private void btnCreate_Click(object sender, System.EventArgs e)
         {
             bool valid = true;
+            string scriptFor = this.cboScriptContents.SelectedItem.ToString();
             if (this.cboScriptContents.SelectedIndex == -1)
             {
                 valid = false;
@@ -564,8 +571,28 @@ namespace DBTableMover
             }
             if (this.dataGrid1.CaptionText == "")
             {
-                valid = false;
-                MessageBox.Show("Please select a database table from the Table Menu.", "Missing Information...");
+                switch (scriptFor)
+                {
+                    case "Table Only":
+                        {
+                            valid = false;
+                            MessageBox.Show("Please select a database table from the Table Menu.", "Missing Information...");
+                            break;
+                        }
+                    case "Values Only":
+                        {
+                            valid = false;
+                            MessageBox.Show("Please select a database table from the Table Menu.", "Missing Information...");
+                            break;
+                        }
+
+                    case "Table and Values":
+                        {
+                            valid = false;
+                            MessageBox.Show("Please select a database table from the Table Menu.", "Missing Information...");
+                            break;
+                        }
+                }
             }
             if (valid)
             {
@@ -575,7 +602,6 @@ namespace DBTableMover
                 if (result == DialogResult.OK)
                 {
                     this.scriptFileName = this.sFDPutFile.FileName.ToString();
-                    string scriptFor = this.cboScriptContents.SelectedItem.ToString();
                     WriteLog(scriptFor);
                     switch (scriptFor)
                     {
@@ -594,12 +620,12 @@ namespace DBTableMover
                                 WriteScriptToFile(ScriptType.TableAndValues);
                                 break;
                             }
-                        case "Database Only":
+                        case "All Tables Only":
                             {
                                 WriteScriptToFile(ScriptType.DatabaseTableStructure);
                                 break;
                             }
-                        case "Database and Values":
+                        case "All Tables and Values":
                             {
                                 WriteScriptToFile(ScriptType.StructureAndValues);
                                 break;
@@ -757,14 +783,13 @@ namespace DBTableMover
             try
             {
                 XmlFunctions xmlFun = new XmlFunctions();
-                this.currentConType = currentConnectionType.XML;
                 this.ofGetXML = new OpenFileDialog();
                 DialogResult result = ofGetXML.ShowDialog(this);
                 if (result == DialogResult.OK)
                 {
                     string fileName = ofGetXML.FileName;
                     dsTable = xmlFun.OpenXmlToDataSet(fileName);
-                   // projVars.CurrentXMLFileName = fileName;
+                    // projVars.CurrentXMLFileName = fileName;
                     this.dataGrid1.DataSource = null;
                     this.miTables.MenuItems.Clear();
                     int x = 0;
@@ -773,12 +798,16 @@ namespace DBTableMover
                         this.miTables.MenuItems.Add(new MenuItem(t.TableName.ToString(), new System.EventHandler(this.mnuTables_Click)));
                         x++;
                     }
-                    MessageBox.Show("Connected.  Select a table and/or script type to continue.");
+                    MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception c)
             {
                 this.WriteLog("FrmMain : Create XML Connection : " + c.Message);
+            }
+            finally
+            {
+                this.currentConType = currentConnectionType.XML;
             }
         }
     }

@@ -15,7 +15,6 @@ namespace DBTableMover
 		{
 
 		}
-		ProjectVariables projVars = new ProjectVariables();
 		DataSet xmlData = new DataSet();
 		string tableName = "";
 		string tableScript = "";
@@ -370,10 +369,7 @@ namespace DBTableMover
 		/// <param name="message">message to send to log</param>
 		private void WriteLog(string message)
 		{
-			if(projVars.debugMode)
-			{
                 ProjectMethods.WriteLog("XmlFunctions", message);
-			}
 		}
 
 	}

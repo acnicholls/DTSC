@@ -10,7 +10,6 @@ namespace DBTableMover
 	{
 
 		private static ProjectInfo inf = new ProjectInfo();
-        private static ProjectVariables projVars = new ProjectVariables();
 		public Start()
 		{
 			//
@@ -26,7 +25,7 @@ namespace DBTableMover
 			foreach(string arg in args)
 			{
                 if (arg.ToUpper() == "/DEBUG")
-                    projVars = new ProjectVariables(true);
+                    ProjectVariables.debugMode = true;
 			}
 			Licence lic = new Licence();
 			if(lic.Valid)
@@ -43,7 +42,7 @@ namespace DBTableMover
 			}
 			else
 			{
-				MessageBox.Show("Bad Licence, contact your vendor.", inf.error, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+				MessageBox.Show("Bad Licence, contact ac.nicholls@gmail.com for a licence file.", inf.error, MessageBoxButtons.OK, MessageBoxIcon.Stop);
 				inf.error = "NEW Error titles....";
 				WriteLog("Bad License Attempt");
 				Application.Exit();
@@ -56,10 +55,7 @@ namespace DBTableMover
 		/// <param name="message">message to send to the log</param>
 		private static void WriteLog(string message)
 		{
-			if(projVars.debugMode)
-			{
                 ProjectMethods.WriteLog("Start", message);
-			}
 		}
 
 	}

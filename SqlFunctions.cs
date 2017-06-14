@@ -15,7 +15,6 @@ namespace DBTableMover
 		private string tableScript;
 		private string valueScript;
 		private DataSet dsTable = new DataSet();
-		private ProjectVariables projVars = new ProjectVariables();
 
 		private SqlConnection conDataConnection = new SqlConnection(frmMain.ConnectionString);
 
@@ -429,10 +428,7 @@ namespace DBTableMover
 		/// <param name="message"></param>
 		private void WriteLog(string message)
 		{
-			if(projVars.debugMode)
-			{
                 ProjectMethods.WriteLog("SqlFunctions", message);
-			}
 		}
 
 	}

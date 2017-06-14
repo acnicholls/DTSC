@@ -7,12 +7,24 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:\"$/DTSC/DBTABLEMOVER/DBMoverSetup\", EDFAAAAA"
-"SccLocalPath" = "8:."
+"SccProjectName" = "8:"
+"SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
-"SccProvider" = "8:MSSCCI:Microsoft Visual SourceSafe"
+"SccProvider" = "8:"
     "Hierarchy"
     {
+        "Entry"
+        {
+        "MsmKey" = "8:_05250940A1316F355D4DC6FA127F6683"
+        "OwnerKey" = "8:_13ABC4D3ED6A4032A3CE2468D9A84481"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_0BC263289502912F5E784B5B51D5EA88"
+        "OwnerKey" = "8:_598C988047EE2B505159E1800903BB14"
+        "MsmSig" = "8:_UNDEFINED"
+        }
         "Entry"
         {
         "MsmKey" = "8:_13ABC4D3ED6A4032A3CE2468D9A84481"
@@ -21,14 +33,32 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_72523A96125C2AAAFE81493CCC4D81C6"
+        "MsmKey" = "8:_598C988047EE2B505159E1800903BB14"
         "OwnerKey" = "8:_13ABC4D3ED6A4032A3CE2468D9A84481"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_862806C014CD96AB12C6DDB1515F3311"
+        "MsmKey" = "8:_D530459FEEDCFD846250F4056A9D7EB1"
+        "OwnerKey" = "8:_05250940A1316F355D4DC6FA127F6683"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_598C988047EE2B505159E1800903BB14"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_13ABC4D3ED6A4032A3CE2468D9A84481"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_05250940A1316F355D4DC6FA127F6683"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -56,6 +86,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
         "Release"
@@ -80,6 +118,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.5 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5"
+                    }
+                }
             }
         }
     }
@@ -111,13 +157,18 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_72523A96125C2AAAFE81493CCC4D81C6"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_05250940A1316F355D4DC6FA127F6683"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Interop.MSDASC, Version=1.0.0.0, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:Interop.MSDASC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_05250940A1316F355D4DC6FA127F6683"
+                    {
+                    "Name" = "8:Interop.MSDASC.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Interop.MSDASC.dll"
             "TargetName" = "8:"
@@ -137,13 +188,38 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_862806C014CD96AB12C6DDB1515F3311"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0BC263289502912F5E784B5B51D5EA88"
+            {
+            "SourcePath" = "8:msado28.tlb"
+            "TargetName" = "8:msado28.tlb"
+            "Tag" = "8:"
+            "Folder" = "8:_4910F49EC87447DB895B0C0721223D25"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:2"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_598C988047EE2B505159E1800903BB14"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Interop.ADODB, Version=2.8.0.0, Culture=neutral"
+            "AssemblyAsmDisplayName" = "8:Interop.ADODB, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_598C988047EE2B505159E1800903BB14"
+                    {
+                    "Name" = "8:Interop.ADODB.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Interop.ADODB.dll"
             "TargetName" = "8:"
@@ -160,6 +236,26 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D530459FEEDCFD846250F4056A9D7EB1"
+            {
+            "SourcePath" = "8:oledb32.dll"
+            "TargetName" = "8:oledb32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_4910F49EC87447DB895B0C0721223D25"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:4"
+            "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -193,7 +289,7 @@
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_4910F49EC87447DB895B0C0721223D25"
                     {
                     "Name" = "8:Database Table Script Creator"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_39B23BD856514939BFAE538BFF331780"
@@ -366,7 +462,7 @@
             {
             "Name" = "8:Database Table Script Creator"
             "Arguments" = "8:"
-            "Description" = "8:"
+            "Description" = "8:Creates SQL Scripts for XML files and SQL Databases"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:32512"
             "Transitive" = "11:FALSE"
@@ -777,7 +873,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_13ABC4D3ED6A4032A3CE2468D9A84481"
             {
-            "SourcePath" = "8:..\\obj\\Debug\\dtsc.exe"
+            "SourcePath" = "8:..\\obj\\Release\\dtsc.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4910F49EC87447DB895B0C0721223D25"

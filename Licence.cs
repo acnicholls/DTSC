@@ -95,7 +95,6 @@ namespace DBTableMover
 
 		public Licence()
 		{
-			string licTXT = "9940c1d7-ec41-455a-be84-c5eebd4d811d";
 			// have this pull the data from a registry entry or from the license file
 			FileInfo licFile = new FileInfo(System.AppDomain.CurrentDomain.BaseDirectory + @"\Licence.txt");
 			if(licFile.Exists)
@@ -106,6 +105,7 @@ namespace DBTableMover
 #if DEBUG
             else
 			{
+			    string licTXT = "9940c1d7-ec41-455a-be84-c5eebd4d811d";
 				outerkey = licTXT;
 			}
 #endif

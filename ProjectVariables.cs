@@ -8,8 +8,8 @@ namespace DBTableMover
 	/// </summary>
 	public class ProjectVariables
 	{
-		private bool debug = false;
-		public bool debugMode
+		private static bool debug = false;
+		public static bool debugMode
 		{
 #if DEBUG
             get { return true; }
@@ -18,24 +18,10 @@ namespace DBTableMover
 
             get{ return debug; }
 #endif
+            set { debug = value; }
         }
-		public ProjectVariables()
-		{
-		}
-		public ProjectVariables(bool debugValue)
-		{
-			debug = debugValue;
-		}
-
-        private string currentXMLFile;
-        public string CurrentXMLFileName
-        {
-            get { return currentXMLFile; }
-            set { currentXMLFile = value; }
-        }
-
-        public RegistryKey RegistryStorage = Registry.CurrentUser;
-        public string profileLocation = @"SOFTWARE\acnicholls\Database Table Script Creator\";
+        public static RegistryKey RegistryStorage = Registry.CurrentUser;
+        public static string profileLocation = @"SOFTWARE\acnicholls\Database Table Script Creator\";
 
     }
 }

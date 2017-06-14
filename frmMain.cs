@@ -1,9 +1,6 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.Win32;
@@ -14,40 +11,44 @@ namespace DBTableMover
     // TODO: tables without primary keys do not close the query well in sql.
 
     /// <summary>
-    /// Summary description for frmMain.
+    /// Main form of the program.
     /// </summary>
     public class frmMain : System.Windows.Forms.Form
     {
         private System.Windows.Forms.MainMenu mmMain;
         private System.Windows.Forms.MenuItem miMain;
         private System.Windows.Forms.MenuItem miExit;
-        private ProjectInfo inf = new ProjectInfo();
         private System.Windows.Forms.MenuItem miOptions;
         private System.Windows.Forms.MenuItem miDataConnection;
-        public static string ConnectionString = "";
         private System.Windows.Forms.MenuItem miEditConnection;
         private System.Windows.Forms.DataGrid dataGrid1;
         private System.Windows.Forms.Button btnCreate;
         private System.Data.SqlClient.SqlConnection conDataConnection;
         private System.Windows.Forms.MenuItem miTables;
         private System.Windows.Forms.SaveFileDialog sFDPutFile;
-
-        private string scriptFileName = "";
-        private string tableScript = "";
-        private string valueScript = "";
         private System.Windows.Forms.ComboBox cboScriptContents;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem miAbout;
         private System.Windows.Forms.MenuItem miXmlConnection;
+        private System.Windows.Forms.OpenFileDialog ofGetXML; 
+
+        public static string ConnectionString = "";
+        private ProjectInfo inf = new ProjectInfo();
+        private string scriptFileName = "";
+        private string tableScript = "";
+        private string valueScript = "";
         private currentConnectionType currentConType;
-        private System.Windows.Forms.OpenFileDialog ofGetXML; //currentConnectionType.MSSQL currentConnectionType
         private ProjectVariables projVars;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.Container components = null;
 
+        /// <summary>
+        /// main constructor
+        /// </summary>
         public frmMain()
         {
             //
@@ -241,12 +242,21 @@ namespace DBTableMover
         }
         #endregion
 
-
+        /// <summary>
+        /// exits the program
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miExit_Select(object sender, System.EventArgs e)
         {
             Application.Exit();
         }
 
+        /// <summary>
+        /// this form's Load method.  Attempts to connect to the last connected database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void frmMain_Load(object sender, System.EventArgs e)
         {
             projVars = new ProjectVariables();
@@ -343,7 +353,7 @@ namespace DBTableMover
                         {
                             // first we open a new dataset, and grab the file content
                             XmlFunctions xmlFun = new XmlFunctions();
-                            dsTable = xmlFun.OpenXmlToDataSet(projVars.CurrentXMLFileName);
+                            dsTable = xmlFun.OpenXmlToDataSet(ofGetXML.FileName);
                             // now we get the table data that the user wants
                             MenuItem itemClicked = (MenuItem)sender;
                             string tableName = itemClicked.Text.ToString();
@@ -365,7 +375,6 @@ namespace DBTableMover
 
         }
 
-
         /// <summary>
         /// this is an internal function to write debug information to a textfile 
         /// if the cmdline option /debug is used.
@@ -373,16 +382,17 @@ namespace DBTableMover
         /// <param name="message"></param>
         private void WriteLog(string message)
         {
-            if (inf.debugMode)
+            if (projVars.debugMode)
             {
-                // this function writes a log of important info and is useful for debugging
-                StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt", true);
-                logFile.WriteLine(DateTime.Now + "    " + message);
-                logFile.Flush();
-                logFile.Close();
+                ProjectMethods.WriteLog("frmMain", message);
             }
         }
 
+        /// <summary>
+        /// brings up a DataLinks form to allow the user to create a new connection.  (overwrites any current connectionstring)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miDataConnection_Click(object sender, System.EventArgs e)
         {
             try
@@ -398,6 +408,7 @@ namespace DBTableMover
                 this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
                 this.conDataConnection.Open();
                 GrabTables();
+                MessageBox.Show("Connected.  Select a table and/or script type to continue.");
             }
             catch (Exception a)
             {
@@ -408,16 +419,19 @@ namespace DBTableMover
                 this.currentConType = currentConnectionType.MSSQL;
             }
         }
-        // if you want to generate a new connection string.
+        
+        /// <summary>
+        /// saves a connection string to the user's registry.  will be loaded automatically each time the program is run.
+        /// </summary>
+        /// <param name="connection">the connection string you want to load</param>
         private void SaveConnectionStringToRegistry(string connection)
         {
+            string connectionVar = string.Empty;
             // split connection into it's separate parts
             WriteLog("ConnectionString = " + connection);
             string[] provider2 = connection.Split(';');
             // open registry location to save to
-            RegistryKey profileLocation = Registry.CurrentUser;
-            string location = @"SOFTWARE\acnicholls.com\Database Table Script Creator\";
-            RegistryKey storage = profileLocation.CreateSubKey(location);
+            RegistryKey storage = projVars.RegistryStorage.CreateSubKey(projVars.profileLocation);
             foreach (string p in provider2)
             {
                 // if it's the provider string save it to registry
@@ -425,59 +439,74 @@ namespace DBTableMover
                 if (p.StartsWith("Provider="))
                     storage.SetValue("Provider", provider2[0].ToString());
                 else
-                    frmMain.ConnectionString += p + ";";
+                    connectionVar += p + ";";
             }
-            // now save the conenction string in registry.
-            storage.SetValue("AdapterConnection", frmMain.ConnectionString);
+            // now save the connection string in registry.
+            storage.SetValue("AdapterConnection", connectionVar);
+            storage.SetValue("ConnectionString", connection);
         }
 
+        /// <summary>
+        /// loads both the provider and the connection string from the registry
+        /// provider is required for the DataLinks form's first page
+        /// </summary>
+        /// <returns>full connectionString</returns>
         private string LoadFullConnectionStringFromRegistry()
         {
-            RegistryKey profileLocation = Registry.CurrentUser;
-            string location = @"SOFTWARE\acnicholls.com\Database Table Script Creator\";
-            RegistryKey storage = profileLocation.CreateSubKey(location);
+            RegistryKey storage = projVars.RegistryStorage.OpenSubKey(projVars.profileLocation);
             string provider = storage.GetValue("Provider").ToString();
             string connection = storage.GetValue("AdapterConnection").ToString();
             return provider + ";" + connection;
         }
 
+        /// <summary>
+        /// loads just the connection string from the registry.  all that's required for most connections
+        /// </summary>
+        /// <returns>connectionString</returns>
         public string LoadAdapterConnectionStringFromRegistry()
         {
-            RegistryKey profileLocation = Registry.CurrentUser;
-            string location = @"SOFTWARE\acnicholls.com\Database Table Script Creator\";
-            RegistryKey storage = profileLocation.CreateSubKey(location);
+            RegistryKey storage = projVars.RegistryStorage.OpenSubKey(projVars.profileLocation);
             string connection = storage.GetValue("AdapterConnection").ToString();
             return connection;
         }
 
+        /// <summary>
+        /// uses the DataLinks form to allow the user to construct a connectionstring in the proper format
+        /// </summary>
+        /// <returns>connection string</returns>
         public string NewConnectionString()
         {
-            object _con = null;
-            MSDASC.DataLinks _link = new MSDASC.DataLinks();
-            _con = _link.PromptNew();
+            ADODB.Connection _con = null;
+            MSDASC.DataLinks _link = new MSDASC.DataLinksClass();
+            _con = (ADODB.Connection)_link.PromptNew();
             if (_con == null) return string.Empty;
-            return ((ADODB.Connection)_con).ConnectionString;
+            return _con.ConnectionString.ToString();
         }
 
-        //If you want to modify an existing connectionstring:
-
+        /// <summary>
+        /// uses the DataLinks form to load the current connectionstring and allows the user to modify it
+        /// </summary>
+        /// <param name="connectionstring"></param>
         public void ExistingConnection(ref string connectionstring)
         {
 
             object _con = new object();
 
-            MSDASC.DataLinks _link = new MSDASC.DataLinks();
-            //((ADODB.Connection)_con).ConnectionString = connectionstring;
+            MSDASC.DataLinks _link = new MSDASC.DataLinksClass();
             ADODB.Connection _ado = new ADODB.Connection();
             _ado.ConnectionString = connectionstring;
             _con = (object)_ado;
             if (_link.PromptEdit(ref _con))
-                ////	{
                 connectionstring = ((ADODB.Connection)_con).ConnectionString;
-            ////	}
             //WriteLog("Connection String : " + connectionstring);
         }
 
+        /// <summary>
+        /// loads the current connectionstring and allows the user to modify it using the DataLinks form.
+        /// then loads the table list for the user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miEditConnection_Click(object sender, System.EventArgs e)
         {
             try
@@ -491,6 +520,7 @@ namespace DBTableMover
                 this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
                 this.conDataConnection.Open();
                 GrabTables();
+                MessageBox.Show("Connected.  Select a table and/or script type to continue.");
             }
             catch (Exception g)
             {
@@ -504,6 +534,9 @@ namespace DBTableMover
 
         }
 
+        /// <summary>
+        /// sends the connectionstring to a file in the current folder.
+        /// </summary>
         private void WriteConnectionString()
         {
 
@@ -515,6 +548,11 @@ namespace DBTableMover
             write.Close();
         }
 
+        /// <summary>
+        /// creates the selected script types for the selected data or database objects
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnCreate_Click(object sender, System.EventArgs e)
         {
             bool valid = true;
@@ -572,6 +610,10 @@ namespace DBTableMover
             }
         }
 
+        /// <summary>
+        /// creates a table creation script for the passed in table name in the currently connected database.
+        /// </summary>
+        /// <param name="tableName"></param>
         private void CreateTableScript(string tableName)
         {
             try
@@ -598,6 +640,10 @@ namespace DBTableMover
             }
         }
 
+        /// <summary>
+        /// creates an insert script for each row in the passed in table
+        /// </summary>
+        /// <param name="tableName"></param>
         private void CreateValueScript(string tableName)
         {
             try
@@ -624,6 +670,10 @@ namespace DBTableMover
             }
         }
 
+        /// <summary>
+        /// initiates the generation of the selected scripts and outputs the resultant string to a file
+        /// </summary>
+        /// <param name="scriptType">the user selected Script Type</param>
         private void WriteScriptToFile(ScriptType scriptType)
         {
             string tableName = this.dataGrid1.CaptionText.ToString();
@@ -685,12 +735,22 @@ namespace DBTableMover
             }
         }
 
+        /// <summary>
+        /// brings up the about form to show the user who wrote this program and copyright information regarding it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miAbout_Click(object sender, System.EventArgs e)
         {
             frmAbout about = new frmAbout();
             about.ShowDialog(this);
         }
 
+        /// <summary>
+        /// connects the program to an XML file to use for script generation
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miXmlConnection_Click(object sender, System.EventArgs e)
         {
             DataSet dsTable = new DataSet();
@@ -704,7 +764,7 @@ namespace DBTableMover
                 {
                     string fileName = ofGetXML.FileName;
                     dsTable = xmlFun.OpenXmlToDataSet(fileName);
-                    projVars.CurrentXMLFileName = fileName;
+                   // projVars.CurrentXMLFileName = fileName;
                     this.dataGrid1.DataSource = null;
                     this.miTables.MenuItems.Clear();
                     int x = 0;
@@ -713,6 +773,7 @@ namespace DBTableMover
                         this.miTables.MenuItems.Add(new MenuItem(t.TableName.ToString(), new System.EventHandler(this.mnuTables_Click)));
                         x++;
                     }
+                    MessageBox.Show("Connected.  Select a table and/or script type to continue.");
                 }
             }
             catch (Exception c)

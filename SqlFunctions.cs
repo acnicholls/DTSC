@@ -15,16 +15,25 @@ namespace DBTableMover
 		private string tableScript;
 		private string valueScript;
 		private DataSet dsTable = new DataSet();
-		private ProjectInfo inf = new ProjectInfo();
+		private ProjectVariables projVars = new ProjectVariables();
 
 		private SqlConnection conDataConnection = new SqlConnection(frmMain.ConnectionString);
 
+        /// <summary>
+        /// main constructor
+        /// </summary>
 		public SqlFunctions()
 		{
 			//
 			// TODO: Add constructor logic here
 			//
 		}
+
+        /// <summary>
+        /// creates the actual script for the passed in table
+        /// </summary>
+        /// <param name="tableName">table to create a script for</param>
+        /// <returns>string</returns>
 		public string CreateTableScript(string tableName)
 		{
 			this.tableScript = "";
@@ -49,8 +58,8 @@ namespace DBTableMover
 				adap.Fill(dsTable);
 				conDataConnection.Close();
 				// insert drop and create scripts
-				tableScript = "if exists(select name from sysobjects where name='" + tableName + "' and type='U')\nBEGIN\ndrop table " + tableName + "\nEND\nGO\n\n";
-				tableScript += "create table [dbo].[" + tableName + "](\n";
+				tableScript = "if exists(select name from sysobjects where name='" + tableName + "' and type='U')\r\nBEGIN\r\ndrop table " + tableName + "\r\nEND\r\nGO\r\n\r\n";
+				tableScript += "create table [dbo].[" + tableName + "]\r(\n";
 				// grab primary key column
 				
 				string[] keyName = CheckForIdentity();
@@ -148,6 +157,11 @@ namespace DBTableMover
 				return tableScript;
 		}
 
+        /// <summary>
+        /// creates insert scripts for each row in the passed in table
+        /// </summary>
+        /// <param name="tableName">name of the table to create scripts for</param>
+        /// <returns>string</returns>
 		public string CreateValueScript(string tableName)
 		{
 
@@ -297,7 +311,7 @@ namespace DBTableMover
 						// add one to the column count
 						r++;
 					}
-					valueScript += ")\n\nGO\n\n";
+					valueScript += ")\r\n\r\nGO\r\n\r\n";
 				}
 			}
 			catch(Exception x)
@@ -306,6 +320,11 @@ namespace DBTableMover
 			}
 				return valueScript;
 		}
+
+        /// <summary>
+        /// checks for an identity column
+        /// </summary>
+        /// <returns>name(s) of identity column(s)</returns>
 		private string[] CheckForIdentity()
 		{
 			try
@@ -333,6 +352,12 @@ namespace DBTableMover
 			}
 			return null;
 		}
+
+        /// <summary>
+        /// checks for primary key column and concatenates a creation string for a Primary Key on an SQL Table
+        /// </summary>
+        /// <param name="tableName">name of the table to check for a primary key</param>
+        /// <returns>string</returns>
 		private string CheckForPrimaryKey(string tableName)
 		{
 			string returnString = "";
@@ -347,7 +372,7 @@ namespace DBTableMover
 					if(row["constraint_type"].ToString().IndexOf("RIMARY KEY",0) == 1)
 					{
 						//grab all values and create primary key string
-						returnString += ",\nCONSTRAINT [" + row[1].ToString() + "] PRIMARY KEY CLUSTERED\n(";
+						returnString += ",\r\nCONSTRAINT [" + row[1].ToString() + "] PRIMARY KEY CLUSTERED\r\n(";
 						// check to see if more than one field is in key
 						string[] columns = row[6].ToString().Split(',');
 						if(columns.Length>1)
@@ -362,11 +387,11 @@ namespace DBTableMover
 									columnNames += "[" + s +"],";
 								count++;
 							}
-							returnString += columnNames + " ASC\n";
+							returnString += columnNames + " ASC\r\n";
 						}
 						else
-							returnString += "[" + row[6].ToString() + "] ASC\n";
-						returnString += ") ON [PRIMARY]\n";
+							returnString += "[" + row[6].ToString() + "] ASC\r\n";
+						returnString += ") ON [PRIMARY]\r\n";
 					}
 				}
 				return returnString;
@@ -374,6 +399,16 @@ namespace DBTableMover
 			else
 				return "";
 		}
+
+        // TODO: find a solution for multi column Primary Keys...
+        /// <summary>
+        /// checks that the passed in columnName does not exist in keys, so it is not an indentifier.  
+        /// Helps when the ID column (PrimaryKey) is a generated column
+        /// Doesn't help when the PrimaryKey is multi column....
+        /// </summary>
+        /// <param name="keys">a list of the Primary Key column names</param>
+        /// <param name="columnName">name of the current column being scripted for</param>
+        /// <returns></returns>
 		private bool CheckForKeyRow(string[] keys, string columnName)
 		{
 			if(keys!=null)
@@ -387,7 +422,6 @@ namespace DBTableMover
 			return false;
 		}
 
-
 		/// <summary>
 		/// this is an internal function to write debug information to a textfile 
 		/// if the cmdline option /debug is used.
@@ -395,13 +429,9 @@ namespace DBTableMover
 		/// <param name="message"></param>
 		private void WriteLog(string message)
 		{
-			if(inf.debugMode)
+			if(projVars.debugMode)
 			{
-				// this function writes a log of important info and is useful for debugging
-				StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt",true);
-				logFile.WriteLine(DateTime.Now + "    " + message);
-				logFile.Flush();
-				logFile.Close();   
+                ProjectMethods.WriteLog("SqlFunctions", message);
 			}
 		}
 

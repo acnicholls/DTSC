@@ -151,7 +151,6 @@
     <Compile Include="XmlFunctions.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="App.ico" />
     <Content Include="TableData.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>TableData.Designer.cs</LastGenOutput>

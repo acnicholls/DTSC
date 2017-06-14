@@ -1,27 +1,31 @@
 using System;
 using System.Windows.Forms;
-using System.Xml;
 using System.Data;
 using System.IO;
 
 
 namespace DBTableMover
 {
-	/// <summary>
-	/// Summary description for XmlFunctions.
-	/// </summary>
-	public class XmlFunctions
+    /// <summary>
+    /// methods for creating scripts from XML files
+    /// </summary>
+    public class XmlFunctions
 	{
 		public XmlFunctions()
 		{
 
 		}
-		ProjectInfo inf = new ProjectInfo();
+		ProjectVariables projVars = new ProjectVariables();
 		DataSet xmlData = new DataSet();
 		string tableName = "";
 		string tableScript = "";
 		string valueScript = "";
 
+        /// <summary>
+        /// opens an XML file (xml or xsd) and reads the xml schema from the file.  if it's XML it also reads the data.
+        /// </summary>
+        /// <param name="newFileName">name of the file to read from</param>
+        /// <returns>DataSet with the schema and/or data from the file</returns>
 		public DataSet OpenXmlToDataSet(string newFileName)
 		{
                 FileInfo file = new FileInfo(newFileName);
@@ -40,6 +44,12 @@ namespace DBTableMover
                 return xmlData;
 		}
 
+        /// <summary>
+        /// creates an SQL Table Creation script for the passed in table name
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
 		public string CreateTableScript(string fileName, string tableName)
 		{
 			this.tableScript = "";
@@ -54,8 +64,8 @@ namespace DBTableMover
 				this.xmlData = this.OpenXmlToDataSet(fileName);
 				this.tableName = tableName;
 				// insert drop and create scripts
-				tableScript = "if exists(select name from sysobjects where name='" + tableName + "' and type='U')\nBEGIN\ndrop table " + tableName + "\nEND\nGO\n\n";
-				tableScript += "create table [dbo].[" + tableName + "](\n";
+				tableScript = "if exists(select name from sysobjects where name='" + tableName + "' and type='U')\r\nBEGIN\r\ndrop table " + tableName + "\r\nEND\r\nGO\r\n\r\n";
+				tableScript += "create table [dbo].[" + tableName + "](\r\n";
 		
 				// grab column values
 				int cols = 0;
@@ -64,7 +74,7 @@ namespace DBTableMover
 					string columnOnly = "";
 					// there's more columns past the first then add this 
 					if(cols >= 1)
-						columnOnly += ",\n";
+						columnOnly += ",\r\n";
 					columnName = row.ColumnName.ToString();
 					columnType = row.DataType.ToString();
 					columnLen = Convert.ToInt32(row.MaxLength.ToString());
@@ -161,7 +171,7 @@ namespace DBTableMover
 				if(PrimaryKeyClause.Length > 0)
 					tableScript += PrimaryKeyClause;
 				// now close the script for the table
-				tableScript += "\n) ON [PRIMARY]";
+				tableScript += "\r\n) ON [PRIMARY] \r\n GO \r\n";
 			}
 			catch(Exception x)
 			{
@@ -170,6 +180,12 @@ namespace DBTableMover
 				return tableScript;
 		}
 
+        /// <summary>
+        /// creates an insert script for each row in the selected table
+        /// </summary>
+        /// <param name="fileName">name of the XML file to write scripts for</param>
+        /// <param name="tableName">name of the selected table</param>
+        /// <returns></returns>
 		public string CreateValueScript(string fileName, string tableName)
 		{
 
@@ -305,7 +321,7 @@ namespace DBTableMover
 						// add one to the column count
 						r++;
 					}
-					valueScript += ")\n\nGO\n\n";
+					valueScript += ")\r\n\r\nGO\r\n\r\n";
 				}
 			}
 			catch(Exception x)
@@ -314,6 +330,12 @@ namespace DBTableMover
 			}
 				return valueScript;
 		}
+
+        /// <summary>
+        /// checks to see if the current table has a primary key, if so, creates a script to include in the table definition
+        /// </summary>
+        /// <param name="tableName">name of the table to check for a primary key</param>
+        /// <returns>PK creation script</returns>
 		private string CheckForPrimaryKey(string tableName)
 		{
 			string returnString = "";
@@ -321,7 +343,7 @@ namespace DBTableMover
 			DataColumn[] keys = xmlData.Tables[tableName].PrimaryKey;
 			if(keys.GetLength(0) > 0)
 			{
-				returnString += ",\nCONSTRAINT [PK_" + tableName + "] PRIMARY KEY CLUSTERED\n(";
+				returnString += ",\r\nCONSTRAINT [PK_" + tableName + "] PRIMARY KEY CLUSTERED\r\n(";
 				string columnNames = "";
 				int count = 0;
 				// now cycle through and check for "PRIMARY KEY"
@@ -334,29 +356,23 @@ namespace DBTableMover
 						columnNames += "[" + row.ColumnName + "],";
 					count++;
 				}
-				returnString += columnNames + " ASC\n";
-				returnString += ") ON [PRIMARY]";
+				returnString += columnNames + " ASC\r\n";
+				returnString += ") ON [PRIMARY]\r\n";
 				return returnString;
 			}
 			else
 				return "";
 		}
 
-
 		/// <summary>
-		/// this is an internal function to write debug information to a textfile 
-		/// if the cmdline option /debug is used.
+		/// write debug information to a textfile 
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">message to send to log</param>
 		private void WriteLog(string message)
 		{
-			if(inf.debugMode)
+			if(projVars.debugMode)
 			{
-				// this function writes a log of important info and is useful for debugging
-				StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt",true);
-				logFile.WriteLine(DateTime.Now + "    " + message);
-				logFile.Flush();
-				logFile.Close();   
+                ProjectMethods.WriteLog("XmlFunctions", message);
 			}
 		}
 

@@ -103,11 +103,13 @@ namespace DBTableMover
 				StreamReader reader = new StreamReader(licFile.FullName);
 				outerkey = reader.ReadLine();
 			}
-			else
+#if DEBUG
+            else
 			{
 				outerkey = licTXT;
 			}
-		}
+#endif
+        }
 		private bool testByteArrays(byte[] test1, byte[] test2)
 		{
 			int i = test1.Length;
@@ -127,21 +129,14 @@ namespace DBTableMover
 				return true;
 			}
 		}
+
 		/// <summary>
 		/// this is an internal function to write debug information to a textfile 
-		/// if the cmdline option /debug is used.
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">the message to send to the log</param>
 		private void WriteLog(string message)
 		{
-			//			if(debugMode)
-			//			{
-			// this function writes a log of important info and is useful for debugging
-			StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt",true);
-			logFile.WriteLine(DateTime.Now + "    " + message);
-			logFile.Flush();
-			logFile.Close();   
-			//			}
+            ProjectMethods.WriteLog("Licence", message);
 		}
 		
 	}

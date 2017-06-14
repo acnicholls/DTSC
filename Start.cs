@@ -1,23 +1,16 @@
 using System;
 using System.Windows.Forms;
-using System.IO;
 
 namespace DBTableMover
 {
 	/// <summary>
-	/// Summary description for Main.
+	/// checks commandline options, checks the user's licence file, and starts the main form
 	/// </summary>
 	public class Start
 	{
-////		static bool debugMode = true;
-////		static string error = "Error...";
-////		static string confirm = "Confirm...";
-////		static string processing = "Processing...";
-////		static string done = "Done...";
-////		static string exit = "Exiting...";
-///
 
 		private static ProjectInfo inf = new ProjectInfo();
+        private static ProjectVariables projVars = new ProjectVariables();
 		public Start()
 		{
 			//
@@ -32,8 +25,8 @@ namespace DBTableMover
 		{
 			foreach(string arg in args)
 			{
-				if(arg.ToUpper() == "/DEBUG")
-					inf.debugMode = true;
+                if (arg.ToUpper() == "/DEBUG")
+                    projVars = new ProjectVariables(true);
 			}
 			Licence lic = new Licence();
 			if(lic.Valid)
@@ -56,24 +49,18 @@ namespace DBTableMover
 				Application.Exit();
 			}
 		}
+
 		/// <summary>
-		/// this is an internal function to write debug information to a textfile 
-		/// if the cmdline option /debug is used.
+		/// used to write to the log
 		/// </summary>
-		/// <param name="message"></param>
+		/// <param name="message">message to send to the log</param>
 		private static void WriteLog(string message)
 		{
-			if(inf.debugMode)
+			if(projVars.debugMode)
 			{
-				// this function writes a log of important info and is useful for debugging
-				StreamWriter logFile = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\debug.txt",true);
-				logFile.WriteLine(DateTime.Now + "    " + message);
-				logFile.Flush();
-				logFile.Close();   
+                ProjectMethods.WriteLog("Start", message);
 			}
 		}
-
-
 
 	}
 }

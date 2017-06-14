@@ -6,6 +6,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTableScriptCreator"
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DatabaseTableScriptCreatorInstaller", "DBMoverSetup\DatabaseScriptCreator.vdproj", "{F069400B-1338-4548-A520-45CCA007279A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{F7DD86AD-ABB4-4720-BACF-747F7E021E17}"
+	ProjectSection(SolutionItems) = preProject
+		ico_dsuiext0032.ico = ico_dsuiext0032.ico
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

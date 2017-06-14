@@ -1,28 +1,29 @@
 using System;
+using Microsoft.Win32;
 
 namespace DBTableMover
 {
 	/// <summary>
-	/// Summary description for ProjectVariables.
+	/// Variable that are used throughout the project, in different forms or classes
 	/// </summary>
 	public class ProjectVariables
 	{
-		private bool debug;
+		private bool debug = false;
 		public bool debugMode
 		{
-			get{ return debug; }
-		}
+#if DEBUG
+            get { return true; }
+#endif
+#if !DEBUG
+
+            get{ return debug; }
+#endif
+        }
 		public ProjectVariables()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 		public ProjectVariables(bool debugValue)
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 			debug = debugValue;
 		}
 
@@ -32,5 +33,9 @@ namespace DBTableMover
             get { return currentXMLFile; }
             set { currentXMLFile = value; }
         }
-	}
+
+        public RegistryKey RegistryStorage = Registry.CurrentUser;
+        public string profileLocation = @"SOFTWARE\acnicholls\Database Table Script Creator\";
+
+    }
 }

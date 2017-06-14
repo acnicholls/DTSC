@@ -4,7 +4,7 @@ using System.Reflection;
 namespace DBTableMover
 {
 /// <summary>
-/// Summary description for ProjectInfo.
+/// class containing information regarding the current project
 /// </summary>
 	public class ProjectInfo
 	{
@@ -67,8 +67,6 @@ namespace DBTableMover
 			}
 		}
 
-		// set this for debug mode
-		public bool debugMode = true;
 		// set these generic titles;
 		public string error = "Error...";
 		public string confirm = "Confirm...";

@@ -6,8 +6,8 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("Database table Script Creator")]
-[assembly: AssemblyDescription("Creates a SQL Script for selected table for moving between development and production servers.")]
+[assembly: AssemblyTitle("Database Table Script Creator")]
+[assembly: AssemblyDescription("Creates SQL Scripts for moving database objects between development and production servers.")]
 [assembly: AssemblyConfiguration("C Sharp for Windows")]
 [assembly: AssemblyCompany("acnicholls.com")]
 [assembly: AssemblyProduct("DTSC.exe")]

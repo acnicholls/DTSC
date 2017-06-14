@@ -25,6 +25,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>0.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -37,7 +38,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -48,7 +48,7 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile />
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile />
+    <DocumentationFile>bin\Debug\dtsc.XML</DocumentationFile>
     <DebugSymbols>true</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <NoStdLib>false</NoStdLib>
@@ -80,6 +80,9 @@
     <WarningLevel>4</WarningLevel>
     <DebugType>none</DebugType>
     <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>DatabaseTableScriptCreator.exe.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <COMReference Include="ADODB">
@@ -151,6 +154,7 @@
     <Compile Include="XmlFunctions.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Content Include="ico_dsuiext0032.ico" />
     <Content Include="TableData.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>TableData.Designer.cs</LastGenOutput>
@@ -161,6 +165,7 @@
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="DatabaseTableScriptCreator.exe.manifest" />
     <None Include="TableData.xsc">
       <DependentUpon>TableData.xsd</DependentUpon>
     </None>

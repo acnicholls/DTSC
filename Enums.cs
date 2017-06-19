@@ -5,8 +5,17 @@ namespace DBTableMover
     /// </summary>
 	public enum currentConnectionType
 	{
-
+        /// <summary>
+        /// used to denote that the interface is connected to a MSSQL database
+        /// </summary>
 		MSSQL,
+        /// <summary>
+        /// used to denote that the interface is connected to a MySQL database
+        /// </summary>
+        MySQL,
+        /// <summary>
+        /// used to denote that the interface is connected to an XML file
+        /// </summary>
 		XML
 	}
 

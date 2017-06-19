@@ -243,6 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
-/FolderSizeCalcPortal/App_Data/log
-/FolderSizeCalcPortal/App_Data/updateChecks
+
 /pullResult.txt
+/Resources/Licence.txt

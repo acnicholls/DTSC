@@ -102,6 +102,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
     </COMReference>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
@@ -132,9 +133,16 @@
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmMySQLConnection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMySQLConnection.Designer.cs">
+      <DependentUpon>frmMySQLConnection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Licence.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MySQLFunctions.cs" />
     <Compile Include="ProjectInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -168,6 +176,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMySQLConnection.resx">
+      <DependentUpon>frmMySQLConnection.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="DatabaseTableScriptCreator.exe.manifest" />

@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.IO;
 using Microsoft.Win32;
+using MySql.Data.MySqlClient;
 
 namespace DBTableMover
 {
@@ -32,6 +33,7 @@ namespace DBTableMover
         private System.Windows.Forms.MenuItem miAbout;
         private System.Windows.Forms.MenuItem miXmlConnection;
         private System.Windows.Forms.OpenFileDialog ofGetXML;
+        private MySql.Data.MySqlClient.MySqlConnection conMySQLConnection;
 
         public static string ConnectionString = "";
         private ProjectInfo inf = new ProjectInfo();
@@ -39,6 +41,10 @@ namespace DBTableMover
         private string tableScript = "";
         private string valueScript = "";
         private currentConnectionType currentConType;
+        private MenuItem menuItem2;
+        private MenuItem miMySQLConnection;
+        private MenuItem miEditMySQLConnection;
+        private MenuItem menuItem3;
         private System.ComponentModel.IContainer components;
 
         /// <summary>
@@ -97,6 +103,10 @@ namespace DBTableMover
             this.cboScriptContents = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ofGetXML = new System.Windows.Forms.OpenFileDialog();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.miMySQLConnection = new System.Windows.Forms.MenuItem();
+            this.miEditMySQLConnection = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -127,24 +137,28 @@ namespace DBTableMover
             this.miOptions.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.miDataConnection,
             this.miEditConnection,
+            this.menuItem2,
+            this.miMySQLConnection,
+            this.miEditMySQLConnection,
+            this.menuItem3,
             this.miXmlConnection});
             this.miOptions.Text = "&Data Connection";
             // 
             // miDataConnection
             // 
             this.miDataConnection.Index = 0;
-            this.miDataConnection.Text = "&New Data Connection...";
+            this.miDataConnection.Text = "&New MSSQL Connection...";
             this.miDataConnection.Click += new System.EventHandler(this.miDataConnection_Click);
             // 
             // miEditConnection
             // 
             this.miEditConnection.Index = 1;
-            this.miEditConnection.Text = "&Edit Existing...";
+            this.miEditConnection.Text = "&Edit Existing MSSQL Connection...";
             this.miEditConnection.Click += new System.EventHandler(this.miEditConnection_Click);
             // 
             // miXmlConnection
             // 
-            this.miXmlConnection.Index = 2;
+            this.miXmlConnection.Index = 6;
             this.miXmlConnection.Text = "&Open Xml File...";
             this.miXmlConnection.Click += new System.EventHandler(this.miXmlConnection_Click);
             // 
@@ -221,6 +235,28 @@ namespace DBTableMover
             // 
             this.ofGetXML.Filter = "(*.xml)|Xml Files|(*.*)|All Files";
             this.ofGetXML.Title = "Create XML Connection...";
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 2;
+            this.menuItem2.Text = "-";
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 5;
+            this.menuItem3.Text = "-";
+            // 
+            // miMySQLConnection
+            // 
+            this.miMySQLConnection.Index = 3;
+            this.miMySQLConnection.Text = "New &MySQL Connection...";
+            this.miMySQLConnection.Click += new System.EventHandler(this.miMySQLConnection_Click);
+            // 
+            // miEditMySQLConnection
+            // 
+            this.miEditMySQLConnection.Index = 4;
+            this.miEditMySQLConnection.Text = "Edit E&xisting MySQL Connection...";
+            this.miEditMySQLConnection.Click += new System.EventHandler(this.miEditMySQLConnection_Click);
             // 
             // frmMain
             // 
@@ -363,6 +399,23 @@ namespace DBTableMover
                             this.dataGrid1.CaptionText = tableName;
                             dataGrid1.Invalidate();
 
+                            break;
+                        }
+                    case currentConnectionType.MySQL:
+                        {
+                            // grab all data from the selected table
+                            MenuItem itemClicked = (MenuItem)sender;
+                            string tableName = itemClicked.Text.ToString();
+                            dsTable.Tables.Clear();
+                            MySqlDataAdapter adap = new MySqlDataAdapter();
+                            MySqlCommand comm = conMySQLConnection.CreateCommand();
+                            comm.CommandType = CommandType.Text;
+                            comm.CommandText = "Select * from " + tableName;
+                            adap.SelectCommand = comm;
+                            adap.Fill(dsTable);
+                            this.dataGrid1.DataSource = dsTable.Tables[0];
+                            this.dataGrid1.CaptionText = tableName;
+                            dataGrid1.Invalidate();
                             break;
                         }
                 }
@@ -809,6 +862,80 @@ namespace DBTableMover
             {
                 this.currentConType = currentConnectionType.XML;
             }
+        }
+
+        private void miEditMySQLConnection_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void miMySQLConnection_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.ofGetXML = null;
+                string provider = this.NewMySQLConnectionString();
+                SaveConnectionStringToRegistry(provider);
+                if (this.conMySQLConnection.State == ConnectionState.Open)
+                {
+                    this.conMySQLConnection.Close();
+                }
+                frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
+                this.conMySQLConnection.ConnectionString = frmMain.ConnectionString.ToString();
+                this.conMySQLConnection.Open();
+                GrabMySQLTables();
+                MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception b)
+            {
+                WriteLog(b.Message);
+            }
+            finally
+            {
+                this.currentConType = currentConnectionType.MySQL;
+            }
+        }
+
+        private void GrabMySQLTables()
+        {
+            DataSet dsTable = new DataSet();
+            dsTable.Clear();
+            this.miTables.MenuItems.Clear();
+            MySqlDataAdapter adap = new MySqlDataAdapter();
+            MySqlCommand comm = conMySQLConnection.CreateCommand();
+            comm.CommandType = CommandType.Text;
+            comm.CommandText = ("SHOW TABLES");
+            adap.SelectCommand = comm;
+            adap.Fill(dsTable);
+            foreach(DataRow row in dsTable.Tables[0].Rows)
+            {
+                miTables.MenuItems.Add(row["name"].ToString(), new System.EventHandler(mnuTables_Click));
+            }
+        }
+
+        private void mnuMySQLTables_Click(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// MySQL does not have an OLE DB type connection therefore we will need a custom form
+        /// to build the connectionstring from.
+        /// </summary>
+        /// <returns>string</returns>
+        private string NewMySQLConnectionString()
+        {
+            MySqlConnection _con = new MySqlConnection();
+            MySqlConnectionStringBuilder _links = new MySqlConnectionStringBuilder();
+            // here we call the custom form then add the parts to the connectionstring builder
+            // Database
+            // Server
+            // UserID
+            // Password
+            frmMain.ConnectionString = _links.ConnectionString.ToString();
+            _con.ConnectionString = frmMain.ConnectionString.ToString();
+            if (_con == null) return string.Empty;
+            return _con.ConnectionString.ToString();
         }
     }
 

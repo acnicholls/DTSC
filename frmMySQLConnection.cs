@@ -53,6 +53,15 @@ namespace DBTableMover
         }
 
         /// <summary>
+        /// constructs this form with values from a given connectionstring
+        /// </summary>
+        /// <param name="connectionString"></param>
+        public frmMySQLConnection(string connectionString)
+        {
+
+        }
+
+        /// <summary>
         /// this button cancels the current operation
         /// </summary>
         /// <param name="sender"></param>

@@ -925,17 +925,17 @@ namespace DBTableMover
         /// <returns>string</returns>
         private string NewMySQLConnectionString()
         {
-            MySqlConnection _con = new MySqlConnection();
-            MySqlConnectionStringBuilder _links = new MySqlConnectionStringBuilder();
-            // here we call the custom form then add the parts to the connectionstring builder
-            // Database
-            // Server
-            // UserID
-            // Password
-            frmMain.ConnectionString = _links.ConnectionString.ToString();
-            _con.ConnectionString = frmMain.ConnectionString.ToString();
-            if (_con == null) return string.Empty;
-            return _con.ConnectionString.ToString();
+            frmMain.ConnectionString = null;
+            frmMySQLConnection _links = new frmMySQLConnection();
+            DialogResult result = _links.ShowDialog(this);
+            if(result == DialogResult.OK)
+            {
+                frmMain.ConnectionString = _links.GetConnectionString;
+                _links.Dispose();
+            }
+
+            if (frmMain.ConnectionString == null) return string.Empty;
+            return frmMain.ConnectionString.ToString();
         }
     }
 

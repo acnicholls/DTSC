@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DBTableMover
@@ -29,7 +22,6 @@ namespace DBTableMover
         private MySql.Data.MySqlClient.MySqlConnectionStringBuilder builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder();
         private string[] keyPairs;
 
-
         /// <summary>
         /// the result of the user's interaction with the form
         /// </summary>
@@ -49,8 +41,6 @@ namespace DBTableMover
                 return builder.GetConnectionString(true);
             }
         }
-
-
 
         /// <summary>
         /// default constructor for this form
@@ -130,6 +120,25 @@ namespace DBTableMover
         private void btnOK_Click(object sender, EventArgs e)
         {
             dialogResult = DialogResult.OK;
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            MySql.Data.MySqlClient.MySqlConnection _con = new MySql.Data.MySqlClient.MySqlConnection(this.GetConnectionString);
+            try
+            {
+                _con.Open();
+                MessageBox.Show("Connection Successful!","Test Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch
+            {
+                MessageBox.Show("Connection Failed.", "Test Result", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                _con.Close();
+            }
+
         }
     }
 }

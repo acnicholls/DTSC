@@ -15,13 +15,21 @@ namespace DBTableMover
     /// </summary>
     public partial class frmMySQLConnection : Form
     {
-
+        enum KeyName
+        {
+            Server,
+            Database,
+            UserID,
+            Password
+        }
         private string server = "";
         private string database = "";
         private string user = "";
         private string password = "";
         private MySql.Data.MySqlClient.MySqlConnectionStringBuilder builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder();
-        
+        private string[] keyPairs;
+
+
         /// <summary>
         /// the result of the user's interaction with the form
         /// </summary>
@@ -34,10 +42,10 @@ namespace DBTableMover
         {
             get
             {
-                builder.Add("Server", txtServer.Text.Trim());
-                builder.Add("Database", txtDatabase.Text.Trim());
-                builder.Add("UserID", txtUser.Text.Trim());
-                builder.Add("Password", txtPassword.Text.Trim());
+                builder.Add(KeyName.Server.ToString(), txtServer.Text.Trim());
+                builder.Add(KeyName.Database.ToString(), txtDatabase.Text.Trim());
+                builder.Add(KeyName.UserID.ToString(), txtUser.Text.Trim());
+                builder.Add(KeyName.Password.ToString(), txtPassword.Text.Trim());
                 return builder.GetConnectionString(true);
             }
         }
@@ -58,7 +66,49 @@ namespace DBTableMover
         /// <param name="connectionString"></param>
         public frmMySQLConnection(string connectionString)
         {
+            keyPairs = connectionString.Split(';');
+            if (KeywordExists(KeyName.Server.ToString()))
+                this.txtServer.Text = KeywordValue(KeyName.Server.ToString());
+            if (KeywordExists(KeyName.Database.ToString()))
+                this.txtDatabase.Text = KeywordValue(KeyName.Database.ToString()); 
+            if (KeywordExists(KeyName.UserID.ToString()))
+                this.txtUser.Text = KeywordValue(KeyName.UserID.ToString());
+            if (KeywordExists(KeyName.Password.ToString()))
+                this.txtPassword.Text = KeywordValue(KeyName.Password.ToString());
+        }
 
+        /// <summary>
+        /// checks the keyPairs in the connectionstring to see if the key exists
+        /// </summary>
+        /// <param name="keyword">the word we're looking for</param>
+        /// <returns>true/false</returns>
+        private bool KeywordExists(string keyword)
+        {
+            foreach(string key in keyPairs)
+            {
+                string[] keyValue = key.Split('=');
+                string word = keyValue[0];
+                if (word == keyword)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// finds the keyword in keyPairs and returns the associated value
+        /// </summary>
+        /// <param name="keyword">the value we want's index</param>
+        /// <returns>string</returns>
+        private string KeywordValue(string keyword)
+        {
+            foreach (string key in keyPairs)
+            {
+                string[] keyValue = key.Split('=');
+                string word = keyValue[0];
+                if (word == keyword)
+                    return keyValue[1].ToString();
+            }
+            return "";
         }
 
         /// <summary>

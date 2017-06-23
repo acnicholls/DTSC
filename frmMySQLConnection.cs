@@ -19,8 +19,8 @@ namespace DBTableMover
         {
             Server,
             Database,
-            UserID,
-            Password
+            UID,
+            PWD
         }
         private string server = "";
         private string database = "";
@@ -44,8 +44,8 @@ namespace DBTableMover
             {
                 builder.Add(KeyName.Server.ToString(), txtServer.Text.Trim());
                 builder.Add(KeyName.Database.ToString(), txtDatabase.Text.Trim());
-                builder.Add(KeyName.UserID.ToString(), txtUser.Text.Trim());
-                builder.Add(KeyName.Password.ToString(), txtPassword.Text.Trim());
+                builder.Add(KeyName.UID.ToString(), txtUser.Text.Trim());
+                builder.Add(KeyName.PWD.ToString(), txtPassword.Text.Trim());
                 return builder.GetConnectionString(true);
             }
         }
@@ -71,10 +71,10 @@ namespace DBTableMover
                 this.txtServer.Text = KeywordValue(KeyName.Server.ToString());
             if (KeywordExists(KeyName.Database.ToString()))
                 this.txtDatabase.Text = KeywordValue(KeyName.Database.ToString()); 
-            if (KeywordExists(KeyName.UserID.ToString()))
-                this.txtUser.Text = KeywordValue(KeyName.UserID.ToString());
-            if (KeywordExists(KeyName.Password.ToString()))
-                this.txtPassword.Text = KeywordValue(KeyName.Password.ToString());
+            if (KeywordExists(KeyName.UID.ToString()))
+                this.txtUser.Text = KeywordValue(KeyName.UID.ToString());
+            if (KeywordExists(KeyName.PWD.ToString()))
+                this.txtPassword.Text = KeywordValue(KeyName.PWD.ToString());
         }
 
         /// <summary>

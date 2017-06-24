@@ -15,10 +15,6 @@ namespace DBTableMover
             UID,
             PWD
         }
-        private string server = "";
-        private string database = "";
-        private string user = "";
-        private string password = "";
         private MySql.Data.MySqlClient.MySqlConnectionStringBuilder builder = new MySql.Data.MySqlClient.MySqlConnectionStringBuilder();
         private string[] keyPairs;
 
@@ -38,6 +34,7 @@ namespace DBTableMover
                 builder.Add(KeyName.Database.ToString(), txtDatabase.Text.Trim());
                 builder.Add(KeyName.UID.ToString(), txtUser.Text.Trim());
                 builder.Add(KeyName.PWD.ToString(), txtPassword.Text.Trim());
+                builder.Add("Port", 3306);
                 return builder.GetConnectionString(true);
             }
         }
@@ -130,8 +127,10 @@ namespace DBTableMover
                 _con.Open();
                 MessageBox.Show("Connection Successful!","Test Result", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch
+            catch(Exception x)
             {
+                WriteLog(x.Message);
+                WriteLog(_con.ConnectionString.ToString());
                 MessageBox.Show("Connection Failed.", "Test Result", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -139,6 +138,15 @@ namespace DBTableMover
                 _con.Close();
             }
 
+        }
+        /// <summary>
+        /// this is an internal function to write debug information to a textfile 
+        /// if the cmdline option /debug is used.
+        /// </summary>
+        /// <param name="message"></param>
+        private void WriteLog(string message)
+        {
+            ProjectMethods.WriteLog("frmMySQLConnection", message);
         }
     }
 }

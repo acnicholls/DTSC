@@ -57,9 +57,7 @@ namespace DBTableMover
             //
             InitializeComponent();
 
-            //
-            // TODO: Add any constructor code after InitializeComponent call
-            //
+            this.conMySQLConnection = new MySqlConnection();
         }
 
         /// <summary>
@@ -876,13 +874,13 @@ namespace DBTableMover
                 this.ofGetXML = null;
                 string provider = this.NewMySQLConnectionString();
                 SaveConnectionStringToRegistry(provider);
-                if (this.conMySQLConnection.State == ConnectionState.Open)
+
+                if( (this.conMySQLConnection != null) || (this.conMySQLConnection.State == ConnectionState.Open) )
                 {
                     this.conMySQLConnection.Close();
                 }
                 frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
                 this.conMySQLConnection.ConnectionString = frmMain.ConnectionString.ToString();
-                this.conMySQLConnection.Open();
                 GrabMySQLTables();
                 MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -896,20 +894,56 @@ namespace DBTableMover
             }
         }
 
+        /// <summary>
+        /// grabs a list of tables from a MySQL database
+        /// </summary>
         private void GrabMySQLTables()
         {
-            DataSet dsTable = new DataSet();
-            dsTable.Clear();
-            this.miTables.MenuItems.Clear();
-            MySqlDataAdapter adap = new MySqlDataAdapter();
-            MySqlCommand comm = conMySQLConnection.CreateCommand();
-            comm.CommandType = CommandType.Text;
-            comm.CommandText = ("SHOW TABLES");
-            adap.SelectCommand = comm;
-            adap.Fill(dsTable);
-            foreach(DataRow row in dsTable.Tables[0].Rows)
+                DataSet dsTable = new DataSet();
+            try
             {
-                miTables.MenuItems.Add(row["name"].ToString(), new System.EventHandler(mnuTables_Click));
+                dsTable.Clear();
+                this.miTables.MenuItems.Clear();
+                MySqlDataAdapter adap = new MySqlDataAdapter();
+                MySqlCommand comm = conMySQLConnection.CreateCommand();
+                comm.CommandType = CommandType.Text;
+                comm.CommandText = ("SHOW TABLES");
+                adap.SelectCommand = comm;
+                conMySQLConnection.Open();
+                adap.Fill(dsTable);
+                foreach (DataRow row in dsTable.Tables[0].Rows)
+                {
+                    miTables.MenuItems.Add(row["tables_in_" + CurrentConnectionDatabaseName].ToString(), new System.EventHandler(mnuTables_Click));
+                }
+            }
+            catch (Exception b)
+            {
+                WriteLog(b.Message);
+                dsTable.WriteXml(Environment.CurrentDirectory + @"/MySQLTables.xml");
+            }
+            finally
+            {
+                conMySQLConnection.Close();
+            }
+        }
+
+        /// <summary>
+        /// gets the current MySQLConnection's database name
+        /// </summary>
+        private string CurrentConnectionDatabaseName
+        {
+            get
+            {
+                string returnValue = string.Empty;
+                string connstring = this.conMySQLConnection.ConnectionString.ToString();
+                string[] keyPairs = connstring.Split(';');
+                foreach(string s in keyPairs)
+                {
+                    string[] values = s.Split('=');
+                    if (values[0].ToLower() == "database")
+                        returnValue = values[1];
+                }
+                return returnValue;
             }
         }
 
@@ -925,17 +959,30 @@ namespace DBTableMover
         /// <returns>string</returns>
         private string NewMySQLConnectionString()
         {
-            frmMain.ConnectionString = null;
-            frmMySQLConnection _links = new frmMySQLConnection();
-            DialogResult result = _links.ShowDialog(this);
-            if(result == DialogResult.OK)
+            try
             {
-                frmMain.ConnectionString = _links.GetConnectionString;
-                _links.Dispose();
-            }
+                frmMain.ConnectionString = null;
+                frmMySQLConnection _links = new frmMySQLConnection();
+                DialogResult result = _links.ShowDialog(this);
+                if (result == DialogResult.OK)
+                {
+                    frmMain.ConnectionString = _links.GetConnectionString;
+                    _links.Dispose();
+                }
 
-            if (frmMain.ConnectionString == null) return string.Empty;
-            return frmMain.ConnectionString.ToString();
+                if (frmMain.ConnectionString == null) return string.Empty;
+                return frmMain.ConnectionString.ToString();
+            }
+            catch(Exception f)
+            {
+                WriteLog(f.Message);
+            }
+            finally
+            {
+                if (conMySQLConnection.State == ConnectionState.Open)
+                    conMySQLConnection.Close();
+            }
+            return string.Empty;
         }
     }
 

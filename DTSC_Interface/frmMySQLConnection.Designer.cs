@@ -132,7 +132,7 @@
             // 
             this.btnTest.Location = new System.Drawing.Point(12, 148);
             this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(94, 23);
+            this.btnTest.Size = new System.Drawing.Size(98, 23);
             this.btnTest.TabIndex = 6;
             this.btnTest.Text = "Test Connection";
             this.btnTest.UseVisualStyleBackColor = true;

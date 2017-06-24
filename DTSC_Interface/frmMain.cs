@@ -862,11 +862,44 @@ namespace DBTableMover
             }
         }
 
+        /// <summary>
+        /// edits the current connectionstring for MySQL Databases
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miEditMySQLConnection_Click(object sender, EventArgs e)
         {
+            try
+            {
+                this.ofGetXML = null;
+                string cd = this.LoadFullConnectionStringFromRegistry();
+                if (this.EditMySQLConnectionString(ref cd))
+                {
+                    this.SaveConnectionStringToRegistry(cd);
+                    frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
+                    this.GrabMySQLTables();
+                    MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception g)
+            {
+                MessageBox.Show("Cannot open connection, please retry.\r\n\r\nError Message: " + g.Message, inf.error);
+                WriteLog("Cannot open new connection:::" + g.Message);
+            }
+            finally
+            {
+                this.currentConType = currentConnectionType.MySQL;
+            }
+
+
 
         }
 
+        /// <summary>
+        /// connects the main form to a MySQL Database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void miMySQLConnection_Click(object sender, EventArgs e)
         {
             try
@@ -984,6 +1017,29 @@ namespace DBTableMover
             }
             return string.Empty;
         }
-    }
 
+        /// <summary>
+        /// uses the MySQL Connection form to allow the user to edit the connection values
+        /// </summary>
+        /// <param name="connectionstring">the current string used</param>
+        /// <returns>true/false</returns>
+        private bool EditMySQLConnectionString(ref string connectionstring)
+        {
+            bool returnValue = false;
+
+            frmMySQLConnection _link = new frmMySQLConnection(connectionstring);
+            DialogResult result = _link.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                connectionstring = _link.GetConnectionString;
+                returnValue = true;
+            }
+            else
+                returnValue = false;
+            WriteLog("Connection String : " + connectionstring);
+            return returnValue;
+
+        }
+
+    }
 }

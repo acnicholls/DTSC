@@ -58,9 +58,9 @@ namespace DBTableMover
                 this.txtServer.Text = KeywordValue(KeyName.Server.ToString());
             if (KeywordExists(KeyName.Database.ToString()))
                 this.txtDatabase.Text = KeywordValue(KeyName.Database.ToString()); 
-            if (KeywordExists(KeyName.UID.ToString()))
+            if (KeywordExists(KeyName.UID.ToString()) | KeywordExists("user id"))
                 this.txtUser.Text = KeywordValue(KeyName.UID.ToString());
-            if (KeywordExists(KeyName.PWD.ToString()))
+            if (KeywordExists(KeyName.PWD.ToString()) | KeywordExists("password"))
                 this.txtPassword.Text = KeywordValue(KeyName.PWD.ToString());
         }
 

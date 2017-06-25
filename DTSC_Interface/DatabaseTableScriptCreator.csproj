@@ -160,19 +160,10 @@
     <Compile Include="Start.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TableData.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TableData.xsd</DependentUpon>
-    </Compile>
     <Compile Include="XmlFunctions.cs">
       <SubType>Code</SubType>
     </Compile>
     <Content Include="ico_dsuiext0032.ico" />
-    <Content Include="TableData.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>TableData.Designer.cs</LastGenOutput>
-    </Content>
     <EmbeddedResource Include="frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
@@ -184,15 +175,6 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="DatabaseTableScriptCreator.exe.manifest" />
-    <None Include="TableData.xsc">
-      <DependentUpon>TableData.xsd</DependentUpon>
-    </None>
-    <None Include="TableData.xss">
-      <DependentUpon>TableData.xsd</DependentUpon>
-    </None>
-    <None Include="TableData.xsx">
-      <DependentUpon>TableData.xsd</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

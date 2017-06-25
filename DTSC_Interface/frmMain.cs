@@ -293,23 +293,32 @@ namespace DBTableMover
             this.Text = this.Text + " v" + inf.Version;
             if(RegistryFunctions.IsSavedConnection)
             {
-                ProjectVariables.currentConType = RegistryFunctions.SavedConnectionType;
-                switch(ProjectVariables.currentConType)
+                try
                 {
-                    case currentConnectionType.MSSQL:
-                        {
-                            conDataConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
-                            GrabMSSQLTables();
-                            break;
-                        }
-                    case currentConnectionType.MySQL:
-                        {
-                            conMySQLConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
-                            GrabMySQLTables();
-                            break;
-                        }
+                    ProjectVariables.currentConType = RegistryFunctions.SavedConnectionType;
+                    switch (ProjectVariables.currentConType)
+                    {
+                        case currentConnectionType.MSSQL:
+                            {
+                                conDataConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                                GrabMSSQLTables();
+                                break;
+                            }
+                        case currentConnectionType.MySQL:
+                            {
+                                conMySQLConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                                GrabMySQLTables();
+                                break;
+                            }
+                    }
+                    MessageBox.Show("Saved Connection Loaded.\r\n\r\n  Choose a table or script type to continue.", inf.confirm, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                MessageBox.Show("Saved Connection Loaded.\r\n\r\n  Choose a table or script type to continue.", inf.confirm, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                catch(Exception x)
+                {
+                    WriteLog(x.Message);
+                    MessageBox.Show("Error loading saved connection.\r\n\r\nPlease click 'Data Connection' to modify or create a new connection.", inf.error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                }
             }
             else
                 MessageBox.Show("To begin, click 'Data Connection' to connect the application to a database or file.", inf.confirm, MessageBoxButtons.OK, MessageBoxIcon.Question);
@@ -607,6 +616,12 @@ namespace DBTableMover
                         {
                             XmlFunctions xmlFun = new XmlFunctions();
                             tableScript = xmlFun.CreateTableScript(this.ofGetXML.FileName, tableName);
+                            break;
+                        }
+                    case currentConnectionType.MySQL:
+                        {
+                            MySQLFunctions mysqlFun = new MySQLFunctions();
+                            tableScript = mysqlFun.CreateTableScript(tableName);
                             break;
                         }
                 }

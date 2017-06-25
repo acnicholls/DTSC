@@ -20,7 +20,7 @@ namespace DBTableMover
             get
             {
                 if (currentConnectionString == string.Empty)
-                    currentConnectionString = RegistryFunctions.LoadFullConnectionStringFromRegistry();
+                    currentConnectionString = RegistryFunctions.LoadAdapterConnectionStringFromRegistry();
                 return currentConnectionString;
             }
             set { currentConnectionString = value; }

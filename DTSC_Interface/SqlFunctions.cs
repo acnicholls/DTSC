@@ -53,9 +53,19 @@ namespace DBTableMover
 				comm.CommandType = CommandType.Text;
 				comm.CommandText = "exec sp_help " + tableName;
 				adap.SelectCommand = comm;
-				conDataConnection.Open();
-				adap.Fill(dsTable);
-				conDataConnection.Close();
+                try
+                {
+                    conDataConnection.Open();
+                    adap.Fill(dsTable);
+                }
+                catch (Exception x)
+                {
+                    WriteLog(x.Message);
+                }
+                finally
+                {
+                    conDataConnection.Close();
+                }
 				// insert drop and create scripts
 				tableScript = "if exists(select name from sysobjects where name='" + tableName + "' and type='U')\r\nBEGIN\r\ndrop table " + tableName + "\r\nEND\r\nGO\r\n\r\n";
 				tableScript += "create table [dbo].[" + tableName + "]\r(\n";
@@ -182,7 +192,9 @@ namespace DBTableMover
 				comm.CommandType = CommandType.Text;
 				comm.CommandText = "select * from " + tableName;
 				adap.SelectCommand = comm;
+                conDataConnection.Open();
 				adap.Fill(dsTable);
+                conDataConnection.Close();
 				// check table for data  
 				int rowCount = dsTable.Tables[0].Rows.Count;
 				if(rowCount==0)
@@ -414,7 +426,7 @@ namespace DBTableMover
 			{
 				foreach(string f in keys)
 				{
-					if(f.ToString() == columnName.ToString())
+					if(f.ToString().ToLower() == columnName.ToString().ToLower())
 						return true;
 				}
 			}

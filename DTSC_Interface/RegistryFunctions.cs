@@ -22,14 +22,31 @@ namespace DBTableMover
                 string[] provider2 = connection.Split(';');
                 // open registry location to save to
                 RegistryKey storage = ProjectVariables.RegistryStorage.CreateSubKey(ProjectVariables.profileLocation);
-                foreach (string p in provider2)
-                {
-                    // if it's the provider string save it to registry
-                    // if not, compile a string for the adapter
-                    if (p.StartsWith("Provider="))
-                        storage.SetValue("Provider", provider2[0].ToString());
-                    else
-                        connectionVar += p + ";";
+                switch (ProjectVariables.currentConType)
+                { 
+                    case currentConnectionType.MSSQL:
+                    {
+                        foreach (string p in provider2)
+                        {
+                            // if it's the provider string save it to registry
+                            // if not, compile a string for the adapter
+                            if (p.StartsWith("Provider="))
+                                storage.SetValue("Provider", provider2[0].ToString());
+                            else
+                                connectionVar += p + ";";
+                        }
+                        break;
+                    }
+                case currentConnectionType.MySQL:
+                    {
+                        // Provider=MSDASQL
+                        storage.SetValue("Provider", "Provider=MSDASQL");
+                        foreach (string p in provider2)
+                        {
+                            connectionVar += p + ";";
+                        }
+                        break;
+                    }
                 }
                 // now save the connection string in registry.
                 storage.SetValue("AdapterConnection", connectionVar);

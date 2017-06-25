@@ -10,6 +10,10 @@ namespace DBTableMover
 	{
 
 		private static ProjectInfo inf = new ProjectInfo();
+
+        /// <summary>
+        /// default start constructor
+        /// </summary>
 		public Start()
 		{
 			//

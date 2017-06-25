@@ -16,7 +16,7 @@ namespace DBTableMover
 		private string valueScript;
 		private DataSet dsTable = new DataSet();
 
-		private SqlConnection conDataConnection = new SqlConnection(frmMain.ConnectionString);
+        private SqlConnection conDataConnection = new SqlConnection(ConnectionStringFunctions.CurrentConnectionString);
 
         /// <summary>
         /// main constructor

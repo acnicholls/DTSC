@@ -1,12 +1,11 @@
-using System;
 using Microsoft.Win32;
 
 namespace DBTableMover
 {
-	/// <summary>
-	/// Variable that are used throughout the project, in different forms or classes
-	/// </summary>
-	public class ProjectVariables
+    /// <summary>
+    /// Variable that are used throughout the project, in different forms or classes
+    /// </summary>
+    public class ProjectVariables
 	{
 		private static bool debug = false;
 
@@ -35,5 +34,9 @@ namespace DBTableMover
         /// </summary>
         public static string profileLocation = @"SOFTWARE\acnicholls\Database Table Script Creator\";
 
+        /// <summary>
+        /// the type of the current data connection
+        /// </summary>
+        public static currentConnectionType currentConType;
     }
 }

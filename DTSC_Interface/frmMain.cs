@@ -1,9 +1,8 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Forms;
 using System.IO;
-using Microsoft.Win32;
+using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
 namespace DBTableMover
@@ -34,18 +33,16 @@ namespace DBTableMover
         private System.Windows.Forms.MenuItem miXmlConnection;
         private System.Windows.Forms.OpenFileDialog ofGetXML;
         private MySql.Data.MySqlClient.MySqlConnection conMySQLConnection;
+        private MenuItem miMySQLConnection;
+        private MenuItem miEditMySQLConnection;
+        private System.ComponentModel.IContainer components;
 
-        public static string ConnectionString = "";
         private ProjectInfo inf = new ProjectInfo();
         private string scriptFileName = "";
         private string tableScript = "";
+        private MenuItem miDCSep1;
+        private MenuItem miDCSep2;
         private string valueScript = "";
-        private currentConnectionType currentConType;
-        private MenuItem menuItem2;
-        private MenuItem miMySQLConnection;
-        private MenuItem miEditMySQLConnection;
-        private MenuItem menuItem3;
-        private System.ComponentModel.IContainer components;
 
         /// <summary>
         /// main constructor
@@ -90,6 +87,8 @@ namespace DBTableMover
             this.miOptions = new System.Windows.Forms.MenuItem();
             this.miDataConnection = new System.Windows.Forms.MenuItem();
             this.miEditConnection = new System.Windows.Forms.MenuItem();
+            this.miMySQLConnection = new System.Windows.Forms.MenuItem();
+            this.miEditMySQLConnection = new System.Windows.Forms.MenuItem();
             this.miXmlConnection = new System.Windows.Forms.MenuItem();
             this.miTables = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
@@ -101,10 +100,8 @@ namespace DBTableMover
             this.cboScriptContents = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ofGetXML = new System.Windows.Forms.OpenFileDialog();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.miMySQLConnection = new System.Windows.Forms.MenuItem();
-            this.miEditMySQLConnection = new System.Windows.Forms.MenuItem();
+            this.miDCSep1 = new System.Windows.Forms.MenuItem();
+            this.miDCSep2 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -135,10 +132,10 @@ namespace DBTableMover
             this.miOptions.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.miDataConnection,
             this.miEditConnection,
-            this.menuItem2,
+            this.miDCSep1,
             this.miMySQLConnection,
             this.miEditMySQLConnection,
-            this.menuItem3,
+            this.miDCSep2,
             this.miXmlConnection});
             this.miOptions.Text = "&Data Connection";
             // 
@@ -146,13 +143,25 @@ namespace DBTableMover
             // 
             this.miDataConnection.Index = 0;
             this.miDataConnection.Text = "&New MSSQL Connection...";
-            this.miDataConnection.Click += new System.EventHandler(this.miDataConnection_Click);
+            this.miDataConnection.Click += new System.EventHandler(this.miMSSQLConnection_Click);
             // 
             // miEditConnection
             // 
             this.miEditConnection.Index = 1;
             this.miEditConnection.Text = "&Edit Existing MSSQL Connection...";
-            this.miEditConnection.Click += new System.EventHandler(this.miEditConnection_Click);
+            this.miEditConnection.Click += new System.EventHandler(this.miEditMSSQLConnection_Click);
+            // 
+            // miMySQLConnection
+            // 
+            this.miMySQLConnection.Index = 3;
+            this.miMySQLConnection.Text = "New &MySQL Connection...";
+            this.miMySQLConnection.Click += new System.EventHandler(this.miMySQLConnection_Click);
+            // 
+            // miEditMySQLConnection
+            // 
+            this.miEditMySQLConnection.Index = 4;
+            this.miEditMySQLConnection.Text = "Edit E&xisting MySQL Connection...";
+            this.miEditMySQLConnection.Click += new System.EventHandler(this.miEditMySQLConnection_Click);
             // 
             // miXmlConnection
             // 
@@ -234,27 +243,15 @@ namespace DBTableMover
             this.ofGetXML.Filter = "(*.xml)|Xml Files|(*.*)|All Files";
             this.ofGetXML.Title = "Create XML Connection...";
             // 
-            // menuItem2
+            // miDCSep1
             // 
-            this.menuItem2.Index = 2;
-            this.menuItem2.Text = "-";
+            this.miDCSep1.Index = 2;
+            this.miDCSep1.Text = "-";
             // 
-            // menuItem3
+            // miDCSep2
             // 
-            this.menuItem3.Index = 5;
-            this.menuItem3.Text = "-";
-            // 
-            // miMySQLConnection
-            // 
-            this.miMySQLConnection.Index = 3;
-            this.miMySQLConnection.Text = "New &MySQL Connection...";
-            this.miMySQLConnection.Click += new System.EventHandler(this.miMySQLConnection_Click);
-            // 
-            // miEditMySQLConnection
-            // 
-            this.miEditMySQLConnection.Index = 4;
-            this.miEditMySQLConnection.Text = "Edit E&xisting MySQL Connection...";
-            this.miEditMySQLConnection.Click += new System.EventHandler(this.miEditMySQLConnection_Click);
+            this.miDCSep2.Index = 5;
+            this.miDCSep2.Text = "-";
             // 
             // frmMain
             // 
@@ -287,69 +284,67 @@ namespace DBTableMover
         }
 
         /// <summary>
-        /// this form's Load method.  Attempts to connect to the last connected database
+        /// this form's Load method. 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void frmMain_Load(object sender, System.EventArgs e)
         {
-            try
+            this.Text = this.Text + " v" + inf.Version;
+            if(RegistryFunctions.IsSavedConnection)
             {
-                try
+                ProjectVariables.currentConType = RegistryFunctions.SavedConnectionType;
+                switch(ProjectVariables.currentConType)
                 {
-                    frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
+                    case currentConnectionType.MSSQL:
+                        {
+                            conDataConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                            GrabMSSQLTables();
+                            break;
+                        }
+                    case currentConnectionType.MySQL:
+                        {
+                            conMySQLConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                            GrabMySQLTables();
+                            break;
+                        }
                 }
-                catch
-                {
-                    if (ConnectionString == "")
-                    {
-                        MessageBox.Show("You require a connection to your data, please fill in the following form.", inf.confirm, MessageBoxButtons.OK, MessageBoxIcon.Question);
-
-                        this.miDataConnection_Click(this, EventArgs.Empty);
-                    }
-                }
-                if (frmMain.ConnectionString == String.Empty)
-                    frmMain.ConnectionString = NewConnectionString();
-                conDataConnection.ConnectionString = frmMain.ConnectionString;
-
-                try
-                {
-                    this.conDataConnection.Open();
-                }
-                catch (Exception sqlEX)
-                {
-                    WriteLog("Error Loading Data......................\n");
-                    WriteLog(sqlEX.Message.ToString());
-                }
-                GrabTables();
-
-                this.Text = this.Text + " v" + inf.Version;
+                MessageBox.Show("Saved Connection Loaded.\r\n\r\n  Choose a table or script type to continue.", inf.confirm, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception x)
-            {
-                WriteLog("Error Loading Data...\n");
-                WriteLog(x.Message.ToString());
-            }
+            else
+                MessageBox.Show("To begin, click 'Data Connection' to connect the application to a database or file.", inf.confirm, MessageBoxButtons.OK, MessageBoxIcon.Question);
 
         }
 
         /// <summary>
         /// fills the datasets for the form, calling in new records form the database etc.
         /// </summary>
-        private void GrabTables()
+        private void GrabMSSQLTables()
         {
-            DataSet dsTable = new DataSet();
-            dsTable.Clear();
-            this.miTables.MenuItems.Clear();
-            SqlDataAdapter adap = new SqlDataAdapter();
-            SqlCommand comm = conDataConnection.CreateCommand();
-            comm.CommandType = CommandType.Text;
-            comm.CommandText = ("select * from sysobjects where type = 'U' and name <> 'dtproperties' and name <> 'sysdiagrams' order by name");
-            adap.SelectCommand = comm;
-            adap.Fill(dsTable);
-            foreach (DataRow row in dsTable.Tables[0].Rows)
+            try
             {
-                miTables.MenuItems.Add(row["name"].ToString(), new System.EventHandler(mnuTables_Click));
+                DataSet dsTable = new DataSet();
+                dsTable.Clear();
+                this.miTables.MenuItems.Clear();
+                SqlDataAdapter adap = new SqlDataAdapter();
+                SqlCommand comm = conDataConnection.CreateCommand();
+                comm.CommandType = CommandType.Text;
+                comm.CommandText = ("select * from sysobjects where type = 'U' and name <> 'dtproperties' and name <> 'sysdiagrams' order by name");
+                adap.SelectCommand = comm;
+                conDataConnection.Open();
+                adap.Fill(dsTable);
+                foreach (DataRow row in dsTable.Tables[0].Rows)
+                {
+                    miTables.MenuItems.Add(row["name"].ToString(), new System.EventHandler(mnuTables_Click));
+                }
+            }
+            catch(Exception x)
+            {
+                WriteLog(x.Message);
+            }
+            finally
+            {
+                conDataConnection.Close();
             }
 
         }
@@ -362,11 +357,11 @@ namespace DBTableMover
         public void mnuTables_Click(object sender, System.EventArgs e)
         {
             DataSet dsTable = new DataSet();
-            try
+            switch (ProjectVariables.currentConType)
             {
-                switch (currentConType)
-                {
-                    case currentConnectionType.MSSQL:
+                case currentConnectionType.MSSQL:
+                    {
+                        try
                         {
                             MenuItem itemClicked = (MenuItem)sender;
                             string tableName = itemClicked.Text.ToString();
@@ -376,30 +371,42 @@ namespace DBTableMover
                             comm.CommandType = CommandType.Text;
                             comm.CommandText = "Select * from " + tableName;
                             adap.SelectCommand = comm;
+                            conDataConnection.Open();
                             adap.Fill(dsTable);
                             this.dataGrid1.DataSource = dsTable.Tables[0];
                             this.dataGrid1.CaptionText = tableName;
                             dataGrid1.Invalidate();
-                            break;
                         }
-                    case currentConnectionType.XML:
+                        catch (Exception x)
                         {
-                            // first we open a new dataset, and grab the file content
-                            XmlFunctions xmlFun = new XmlFunctions();
-                            dsTable = xmlFun.OpenXmlToDataSet(ofGetXML.FileName);
-                            // now we get the table data that the user wants
-                            MenuItem itemClicked = (MenuItem)sender;
-                            string tableName = itemClicked.Text.ToString();
-
-                            DataTable gridTable = dsTable.Tables[tableName];
-
-                            this.dataGrid1.DataSource = gridTable;
-                            this.dataGrid1.CaptionText = tableName;
-                            dataGrid1.Invalidate();
-
-                            break;
+                            WriteLog(x.Message);
                         }
-                    case currentConnectionType.MySQL:
+                        finally
+                        {
+                            conDataConnection.Close();
+                        }
+                        break;
+                    }
+                case currentConnectionType.XML:
+                    {
+                        // first we open a new dataset, and grab the file content
+                        XmlFunctions xmlFun = new XmlFunctions();
+                        dsTable = xmlFun.OpenXmlToDataSet(ofGetXML.FileName);
+                        // now we get the table data that the user wants
+                        MenuItem itemClicked = (MenuItem)sender;
+                        string tableName = itemClicked.Text.ToString();
+
+                        DataTable gridTable = dsTable.Tables[tableName];
+
+                        this.dataGrid1.DataSource = gridTable;
+                        this.dataGrid1.CaptionText = tableName;
+                        dataGrid1.Invalidate();
+
+                        break;
+                    }
+                case currentConnectionType.MySQL:
+                    {
+                        try
                         {
                             // grab all data from the selected table
                             MenuItem itemClicked = (MenuItem)sender;
@@ -410,18 +417,23 @@ namespace DBTableMover
                             comm.CommandType = CommandType.Text;
                             comm.CommandText = "Select * from " + tableName;
                             adap.SelectCommand = comm;
+                            conMySQLConnection.Open();
                             adap.Fill(dsTable);
                             this.dataGrid1.DataSource = dsTable.Tables[0];
                             this.dataGrid1.CaptionText = tableName;
                             dataGrid1.Invalidate();
-                            break;
                         }
-                }
-            }
-            catch (Exception x)
-            {
-                WriteLog("Error in mnuTables_Click : " + x.Message);
-            }
+                        catch (Exception x)
+                        {
+                            WriteLog(x.Message);
+                        }
+                        finally
+                        {
+                            conMySQLConnection.Close();
+                        }
+                        break;
+                    }
+            } // end switch
 
         }
 
@@ -440,120 +452,32 @@ namespace DBTableMover
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miDataConnection_Click(object sender, System.EventArgs e)
+        private void miMSSQLConnection_Click(object sender, System.EventArgs e)
         {
             try
             {
-                this.ofGetXML = null;
-                string provider = this.NewConnectionString();
-                SaveConnectionStringToRegistry(provider);
-                if (this.conDataConnection.State == ConnectionState.Open)
+                ClearValues();
+                if (ConnectionStringFunctions.NewMSSQLConnectionString())
                 {
-                    this.conDataConnection.Close();
+                    this.conDataConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                    GrabMSSQLTables();
+                    MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
-                this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
-                this.conDataConnection.Open();
-                GrabTables();
-                MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception a)
             {
                 WriteLog(a.Message);
             }
-            finally
-            {
-                this.currentConType = currentConnectionType.MSSQL;
-            }
         }
 
         /// <summary>
-        /// saves a connection string to the user's registry.  will be loaded automatically each time the program is run.
+        /// clears all data related values when a DataConnection menu item is clicked.
         /// </summary>
-        /// <param name="connection">the connection string you want to load</param>
-        private void SaveConnectionStringToRegistry(string connection)
+        private void ClearValues()
         {
-            string connectionVar = string.Empty;
-            // split connection into it's separate parts
-            WriteLog("ConnectionString = " + connection);
-            string[] provider2 = connection.Split(';');
-            // open registry location to save to
-            RegistryKey storage = ProjectVariables.RegistryStorage.CreateSubKey(ProjectVariables.profileLocation);
-            foreach (string p in provider2)
-            {
-                // if it's the provider string save it to registry
-                // if not, compile a string for the adapter
-                if (p.StartsWith("Provider="))
-                    storage.SetValue("Provider", provider2[0].ToString());
-                else
-                    connectionVar += p + ";";
-            }
-            // now save the connection string in registry.
-            storage.SetValue("AdapterConnection", connectionVar);
-            storage.SetValue("ConnectionString", connection);
-        }
-
-        /// <summary>
-        /// loads both the provider and the connection string from the registry
-        /// provider is required for the DataLinks form's first page
-        /// </summary>
-        /// <returns>full connectionString</returns>
-        private string LoadFullConnectionStringFromRegistry()
-        {
-            RegistryKey storage = ProjectVariables.RegistryStorage.OpenSubKey(ProjectVariables.profileLocation);
-            string provider = storage.GetValue("Provider").ToString();
-            string connection = storage.GetValue("AdapterConnection").ToString();
-            return provider + ";" + connection;
-        }
-
-        /// <summary>
-        /// loads just the connection string from the registry.  all that's required for most connections
-        /// </summary>
-        /// <returns>connectionString</returns>
-        public string LoadAdapterConnectionStringFromRegistry()
-        {
-            RegistryKey storage = ProjectVariables.RegistryStorage.OpenSubKey(ProjectVariables.profileLocation);
-            string connection = storage.GetValue("AdapterConnection").ToString();
-            return connection;
-        }
-
-        /// <summary>
-        /// uses the DataLinks form to allow the user to construct a connectionstring in the proper format
-        /// </summary>
-        /// <returns>connection string</returns>
-        public string NewConnectionString()
-        {
-            ADODB.Connection _con = null;
-            MSDASC.DataLinks _link = new MSDASC.DataLinksClass();
-            _con = (ADODB.Connection)_link.PromptNew();
-            if (_con == null) return string.Empty;
-            return _con.ConnectionString.ToString();
-        }
-
-        /// <summary>
-        /// uses the DataLinks form to load the current connectionstring and allows the user to modify it
-        /// </summary>
-        /// <param name="connectionstring"></param>
-        public bool ExistingConnection(ref string connectionstring)
-        {
-            bool returnValue = false;
-            object _con = new object();
-
-            MSDASC.DataLinks _link = new MSDASC.DataLinksClass();
-            ADODB.Connection _ado = new ADODB.Connection();
-            _ado.ConnectionString = connectionstring;
-            _con = (object)_ado;
-            if (_link.PromptEdit(ref _con))
-            {
-                connectionstring = ((ADODB.Connection)_con).ConnectionString;
-                returnValue = true;
-            }
-            else
-            {
-                returnValue = false;
-            }
-            WriteLog("Connection String : " + connectionstring);
-            return returnValue;
+            this.ofGetXML = null;
+            this.dataGrid1.DataSource = null;
+            dataGrid1.Invalidate();
         }
 
         /// <summary>
@@ -562,20 +486,15 @@ namespace DBTableMover
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miEditConnection_Click(object sender, System.EventArgs e)
+        private void miEditMSSQLConnection_Click(object sender, System.EventArgs e)
         {
             try
             {
-                this.ofGetXML = null;
-                string cd = this.LoadFullConnectionStringFromRegistry();
-                if (ExistingConnection(ref cd))
+                ClearValues();
+                if (ConnectionStringFunctions.EditMSSQLConnectionString())
                 {
-                    this.SaveConnectionStringToRegistry(cd);
-                    this.conDataConnection.Close();
-                    frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
-                    this.conDataConnection.ConnectionString = frmMain.ConnectionString.ToString();
-                    this.conDataConnection.Open();
-                    GrabTables();
+                    this.conDataConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                    GrabMSSQLTables();
                     MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -584,25 +503,6 @@ namespace DBTableMover
                 MessageBox.Show("Cannot open connection, please retry.\r\n\r\nError Message: " + g.Message, inf.error);
                 WriteLog("Cannot open new connection:::" + g.Message);
             }
-            finally
-            {
-                this.currentConType = currentConnectionType.MSSQL;
-            }
-
-        }
-
-        /// <summary>
-        /// sends the connectionstring to a file in the current folder.
-        /// </summary>
-        private void WriteConnectionString()
-        {
-
-            //	save to file
-            StreamWriter write = new StreamWriter(System.AppDomain.CurrentDomain.BaseDirectory + @"\connectionString.txt", false);
-            write.WriteLine(frmMain.ConnectionString);
-            write.WriteLine();
-            write.Flush();
-            write.Close();
         }
 
         /// <summary>
@@ -695,7 +595,7 @@ namespace DBTableMover
         {
             try
             {
-                switch (this.currentConType)
+                switch (ProjectVariables.currentConType)
                 {
                     case currentConnectionType.MSSQL:
                         {
@@ -725,7 +625,7 @@ namespace DBTableMover
         {
             try
             {
-                switch (this.currentConType)
+                switch (ProjectVariables.currentConType)
                 {
                     case currentConnectionType.MSSQL:
                         {
@@ -830,6 +730,7 @@ namespace DBTableMover
         /// <param name="e"></param>
         private void miXmlConnection_Click(object sender, System.EventArgs e)
         {
+            ClearValues();
             DataSet dsTable = new DataSet();
             try
             {
@@ -840,7 +741,6 @@ namespace DBTableMover
                 {
                     string fileName = ofGetXML.FileName;
                     dsTable = xmlFun.OpenXmlToDataSet(fileName);
-                    // projVars.CurrentXMLFileName = fileName;
                     this.dataGrid1.DataSource = null;
                     this.miTables.MenuItems.Clear();
                     int x = 0;
@@ -858,7 +758,7 @@ namespace DBTableMover
             }
             finally
             {
-                this.currentConType = currentConnectionType.XML;
+                ProjectVariables.currentConType = currentConnectionType.XML;
             }
         }
 
@@ -871,13 +771,11 @@ namespace DBTableMover
         {
             try
             {
-                this.ofGetXML = null;
-                string cd = this.LoadFullConnectionStringFromRegistry();
-                if (this.EditMySQLConnectionString(ref cd))
+                ClearValues();
+                if (ConnectionStringFunctions.EditMySQLConnectionString())
                 {
-                    this.SaveConnectionStringToRegistry(cd);
-                    frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
-                    this.GrabMySQLTables();
+                    conMySQLConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                    GrabMySQLTables();
                     MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -886,13 +784,6 @@ namespace DBTableMover
                 MessageBox.Show("Cannot open connection, please retry.\r\n\r\nError Message: " + g.Message, inf.error);
                 WriteLog("Cannot open new connection:::" + g.Message);
             }
-            finally
-            {
-                this.currentConType = currentConnectionType.MySQL;
-            }
-
-
-
         }
 
         /// <summary>
@@ -904,26 +795,17 @@ namespace DBTableMover
         {
             try
             {
-                this.ofGetXML = null;
-                string provider = this.NewMySQLConnectionString();
-                SaveConnectionStringToRegistry(provider);
-
-                if( (this.conMySQLConnection != null) || (this.conMySQLConnection.State == ConnectionState.Open) )
+                ClearValues();
+                if (ConnectionStringFunctions.NewMySQLConnectionString())
                 {
-                    this.conMySQLConnection.Close();
+                    conMySQLConnection.ConnectionString = ConnectionStringFunctions.CurrentConnectionString;
+                    GrabMySQLTables();
+                    MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                frmMain.ConnectionString = this.LoadAdapterConnectionStringFromRegistry();
-                this.conMySQLConnection.ConnectionString = frmMain.ConnectionString.ToString();
-                GrabMySQLTables();
-                MessageBox.Show("Select a table from the menu above \r\n and/or a script type from the drop down to continue.", "Connected...", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception b)
             {
                 WriteLog(b.Message);
-            }
-            finally
-            {
-                this.currentConType = currentConnectionType.MySQL;
             }
         }
 
@@ -932,7 +814,7 @@ namespace DBTableMover
         /// </summary>
         private void GrabMySQLTables()
         {
-                DataSet dsTable = new DataSet();
+            DataSet dsTable = new DataSet();
             try
             {
                 dsTable.Clear();
@@ -946,99 +828,18 @@ namespace DBTableMover
                 adap.Fill(dsTable);
                 foreach (DataRow row in dsTable.Tables[0].Rows)
                 {
-                    miTables.MenuItems.Add(row["tables_in_" + CurrentConnectionDatabaseName].ToString(), new System.EventHandler(mnuTables_Click));
+                    miTables.MenuItems.Add(row["tables_in_" + ConnectionStringFunctions.CurrentConnectionDatabaseName].ToString(), new System.EventHandler(mnuTables_Click));
                 }
             }
             catch (Exception b)
             {
                 WriteLog(b.Message);
-                dsTable.WriteXml(Environment.CurrentDirectory + @"/MySQLTables.xml");
             }
             finally
             {
+                dsTable.WriteXml(Environment.CurrentDirectory + @"/MySQLTables.xml");
                 conMySQLConnection.Close();
             }
-        }
-
-        /// <summary>
-        /// gets the current MySQLConnection's database name
-        /// </summary>
-        private string CurrentConnectionDatabaseName
-        {
-            get
-            {
-                string returnValue = string.Empty;
-                string connstring = this.conMySQLConnection.ConnectionString.ToString();
-                string[] keyPairs = connstring.Split(';');
-                foreach(string s in keyPairs)
-                {
-                    string[] values = s.Split('=');
-                    if (values[0].ToLower() == "database")
-                        returnValue = values[1];
-                }
-                return returnValue;
-            }
-        }
-
-        private void mnuMySQLTables_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// MySQL does not have an OLE DB type connection therefore we will need a custom form
-        /// to build the connectionstring from.
-        /// </summary>
-        /// <returns>string</returns>
-        private string NewMySQLConnectionString()
-        {
-            try
-            {
-                frmMain.ConnectionString = null;
-                frmMySQLConnection _links = new frmMySQLConnection();
-                DialogResult result = _links.ShowDialog(this);
-                if (result == DialogResult.OK)
-                {
-                    frmMain.ConnectionString = _links.GetConnectionString;
-                    _links.Dispose();
-                }
-
-                if (frmMain.ConnectionString == null) return string.Empty;
-                return frmMain.ConnectionString.ToString();
-            }
-            catch(Exception f)
-            {
-                WriteLog(f.Message);
-            }
-            finally
-            {
-                if (conMySQLConnection.State == ConnectionState.Open)
-                    conMySQLConnection.Close();
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// uses the MySQL Connection form to allow the user to edit the connection values
-        /// </summary>
-        /// <param name="connectionstring">the current string used</param>
-        /// <returns>true/false</returns>
-        private bool EditMySQLConnectionString(ref string connectionstring)
-        {
-            bool returnValue = false;
-
-            frmMySQLConnection _link = new frmMySQLConnection(connectionstring);
-            DialogResult result = _link.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                connectionstring = _link.GetConnectionString;
-                returnValue = true;
-            }
-            else
-                returnValue = false;
-            WriteLog("Connection String : " + connectionstring);
-            return returnValue;
-
         }
 
     }

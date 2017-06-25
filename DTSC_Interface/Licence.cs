@@ -92,8 +92,10 @@ namespace DBTableMover
 			}
 		}
 
-
-		public Licence()
+        /// <summary>
+        /// default constructor for the licence functions
+        /// </summary>
+        public Licence()
 		{
 			// have this pull the data from a registry entry or from the license file
 			FileInfo licFile = new FileInfo(System.AppDomain.CurrentDomain.BaseDirectory + @"\Licence.txt");

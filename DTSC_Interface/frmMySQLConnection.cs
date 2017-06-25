@@ -19,11 +19,6 @@ namespace DBTableMover
         private string[] keyPairs;
 
         /// <summary>
-        /// the result of the user's interaction with the form
-        /// </summary>
-        public DialogResult dialogResult = new DialogResult();
-
-        /// <summary>
         /// builds the connectionstring from the values entered in the form controls
         /// </summary>
         public string GetConnectionString
@@ -50,18 +45,33 @@ namespace DBTableMover
         /// <summary>
         /// constructs this form with values from a given connectionstring
         /// </summary>
-        /// <param name="connectionString"></param>
+        /// <param name="connectionString">the connectionstring values to populate form controls with</param>
         public frmMySQLConnection(string connectionString)
         {
-            keyPairs = connectionString.Split(';');
-            if (KeywordExists(KeyName.Server.ToString()))
-                this.txtServer.Text = KeywordValue(KeyName.Server.ToString());
-            if (KeywordExists(KeyName.Database.ToString()))
-                this.txtDatabase.Text = KeywordValue(KeyName.Database.ToString()); 
-            if (KeywordExists(KeyName.UID.ToString()) | KeywordExists("user id"))
-                this.txtUser.Text = KeywordValue(KeyName.UID.ToString());
-            if (KeywordExists(KeyName.PWD.ToString()) | KeywordExists("password"))
-                this.txtPassword.Text = KeywordValue(KeyName.PWD.ToString());
+            // required default call to create child controls.
+            InitializeComponent();
+            // custom commands to manipulate form
+            try
+            {
+                keyPairs = connectionString.Split(';');
+                if (KeywordExists(KeyName.Server.ToString()))
+                    this.txtServer.Text = KeywordValue(KeyName.Server.ToString());
+                if (KeywordExists(KeyName.Database.ToString()))
+                    this.txtDatabase.Text = KeywordValue(KeyName.Database.ToString());
+                // TODO: fix the problem where the "Add" function of the connectionstringbuilder object doesn't add UID, instead it adds "user id"...same with password
+                if (KeywordExists(KeyName.UID.ToString()))
+                    this.txtUser.Text = KeywordValue(KeyName.UID.ToString());
+                if (KeywordExists("user id"))
+                    this.txtUser.Text = KeywordValue("user id");
+                if (KeywordExists(KeyName.PWD.ToString()))
+                    this.txtPassword.Text = KeywordValue(KeyName.PWD.ToString());
+                if (KeywordExists("password"))
+                    this.txtPassword.Text = KeywordValue("password");
+            }
+            catch(Exception x)
+            {
+                WriteLog(x.Message);
+            }
         }
 
         /// <summary>
@@ -75,7 +85,7 @@ namespace DBTableMover
             {
                 string[] keyValue = key.Split('=');
                 string word = keyValue[0];
-                if (word == keyword)
+                if (word.ToLower() == keyword.ToLower())
                     return true;
             }
             return false;
@@ -92,7 +102,7 @@ namespace DBTableMover
             {
                 string[] keyValue = key.Split('=');
                 string word = keyValue[0];
-                if (word == keyword)
+                if (word.ToLower() == keyword.ToLower())
                     return keyValue[1].ToString();
             }
             return "";
@@ -105,7 +115,6 @@ namespace DBTableMover
         /// <param name="e"></param>
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            dialogResult = DialogResult.Cancel;
             this.Close();
         }
 
@@ -116,9 +125,13 @@ namespace DBTableMover
         /// <param name="e"></param>
         private void btnOK_Click(object sender, EventArgs e)
         {
-            dialogResult = DialogResult.OK;
         }
 
+        /// <summary>
+        /// tests the connectionstring by attempting to open a connection to the database
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnTest_Click(object sender, EventArgs e)
         {
             MySql.Data.MySqlClient.MySqlConnection _con = new MySql.Data.MySqlClient.MySqlConnection(this.GetConnectionString);
@@ -148,5 +161,6 @@ namespace DBTableMover
         {
             ProjectMethods.WriteLog("frmMySQLConnection", message);
         }
+
     }
 }

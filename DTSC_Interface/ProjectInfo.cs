@@ -8,6 +8,9 @@ namespace DBTableMover
 /// </summary>
 	public class ProjectInfo
 	{
+        /// <summary>
+        /// the version of the currently executing assemmbly
+        /// </summary>
 		public string Version
 		{
 			get
@@ -17,6 +20,10 @@ namespace DBTableMover
 				return Convert.ToString(an.Version);
 			}
 		}
+
+        /// <summary>
+        /// the language the program is written in
+        /// </summary>
 		public string Language
 		{
 			get
@@ -25,6 +32,10 @@ namespace DBTableMover
 				return lang;
 			}
 		}
+
+        /// <summary>
+        /// the author of the program
+        /// </summary>
 		public string Author
 		{
 			get
@@ -33,14 +44,22 @@ namespace DBTableMover
 				return auth;
 			}
 		}
+
+        /// <summary>
+        /// the website of the author and/or program
+        /// </summary>
 		public string Website
 		{
 			get
 			{
-				string url = "http://www.acnicholls.com";
+				string url = "http://ac.is-a-guru.com";
 				return url;
 			}
 		}
+
+        /// <summary>
+        /// the name of the program
+        /// </summary>
 		public string Name
 		{
 			get
@@ -49,6 +68,10 @@ namespace DBTableMover
 				return name;
 			}
 		}
+
+        /// <summary>
+        /// the manufacturer fo the program
+        /// </summary>
 		public string Manufacturer
 		{
 			get
@@ -58,6 +81,9 @@ namespace DBTableMover
 			}
 		}
 
+        /// <summary>
+        /// the description of the program
+        /// </summary>
 		public string Description
 		{
 			get
@@ -68,11 +94,29 @@ namespace DBTableMover
 		}
 
 		// set these generic titles;
+        /// <summary>
+        /// generic error message
+        /// </summary>
 		public string error = "Error...";
+
+        /// <summary>
+        /// generic confirmation message
+        /// </summary>
 		public string confirm = "Confirm...";
+
+        /// <summary>
+        /// generic processing message
+        /// </summary>
 		public string processing = "Processing...";
+
+        /// <summary>
+        /// generic done message
+        /// </summary>
 		public string done = "Done...";
+
+        /// <summary>
+        /// generic exiting message
+        /// </summary>
 		public string exit = "Exiting...";
-		// set other global variables.
 	} 
 }

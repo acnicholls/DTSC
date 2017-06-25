@@ -124,6 +124,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ConnectionStringFunctions.cs" />
     <Compile Include="Enums.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,6 +153,7 @@
     <Compile Include="ProjectVariables.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="RegistryFunctions.cs" />
     <Compile Include="SqlFunctions.cs">
       <SubType>Code</SubType>
     </Compile>

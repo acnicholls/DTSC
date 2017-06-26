@@ -192,7 +192,7 @@ namespace DBTableMover
 				adap.Fill(dsTable);
 				// grab table identities column names
 				string[] keyrows = CheckForIdentity();
-				///now start creating the script for the values
+				// now start creating the script for the values
 				this.dsTable.Tables.Clear();
 				comm = conDataConnection.CreateCommand();
 				comm.CommandType = CommandType.Text;

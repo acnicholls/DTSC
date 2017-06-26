@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
+using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
 namespace DBTableMover
@@ -284,8 +281,92 @@ namespace DBTableMover
         /// <returns>string</returns>
         public string CreateValueScript(string tableName)
         {
-            string returnValue = string.Empty;
-            return returnValue;
+            valueScript = string.Empty;
+            try
+            {
+                MySql.Data.MySqlClient.MySqlDataAdapter adap = new MySqlDataAdapter();
+                MySqlCommand comm = conMySQLConnection.CreateCommand();
+                comm.CommandType = CommandType.Text;
+                comm.CommandText = "select * from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = '" + tableName + "'";
+                adap.SelectCommand = comm;
+                conMySQLConnection.Open();
+                adap.Fill(dsTable);
+                conMySQLConnection.Close();
+                // get ID columns
+                string[] keyrows = CheckForIdentity();
+                // create value row scripts
+                this.dsTable.Clear();
+                comm = conMySQLConnection.CreateCommand();
+                comm.CommandType = CommandType.Text;
+                comm.CommandText = "select * from " + tableName;
+                adap.SelectCommand = comm;
+                conMySQLConnection.Open();
+                adap.Fill(dsTable);
+                conMySQLConnection.Close();
+                // check the table for data
+                int rowCount = dsTable.Tables[0].Rows.Count;
+                if (rowCount == 0)
+                {
+                    MessageBox.Show("There is no data to script for.", "Empty Table...");
+                    Exception x = new Exception("Empty Table");
+                    throw (x);
+                }
+                string columnNames = string.Empty;
+                DataRow columnRow = dsTable.Tables[0].Rows[0];
+                int c = 0;
+                foreach (DataColumn col in columnRow.Table.Columns)
+                {
+                    if (CheckForKeyRow(keyrows, col.ColumnName.ToString()))
+                        continue;
+                    else
+                    {
+                        c++;
+                        if (c == 1)
+                            columnNames += col.ColumnName.ToString();
+                        else
+                            columnNames += "," + col.ColumnName.ToString();
+                    }
+                }
+                // now grab the values and build the SQL
+                foreach (DataRow row in dsTable.Tables[0].Rows)
+                {
+                    int r = 0;
+                    valueScript += "INSERT INTO [dbo].[" + tableName + "] (" + columnNames + ") VALUES (";
+                    int n = 0;  // number of columns added to script
+                    foreach (DataColumn col in row.Table.Columns)
+                    {
+                        if (CheckForKeyRow(keyrows, col.ColumnName.ToString()))
+                        {
+                            r++;
+                            continue;
+                        }
+                        else
+                        {
+                            if (n > 0)
+                                valueScript += ",";
+                            string colType = col.DataType.ToString();
+                            WriteLog("colType :" + colType);
+                            WriteLog("ToString : " + col.ToString());
+                            WriteLog(" \n");
+                            if (Convert.IsDBNull(row[r]))
+                                valueScript += "NULL";
+                            else
+                            {
+                                // depending on dataType, set up the text that will insert the correct value
+
+                            }
+                            n++;
+                        }
+                        r++;
+                    }
+                    valueScript += ")\r\n\r\nGO\r\n\r\n";
+                }
+            }
+            catch (Exception x)
+            {
+                WriteLog(x.Message);
+            }
+            return valueScript;
         }
 
         /// <summary>

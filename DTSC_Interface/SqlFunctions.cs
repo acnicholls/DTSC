@@ -11,6 +11,12 @@ namespace DBTableMover
 	/// </summary>
 	public class SqlFunctions
 	{
+        // for this database type we will get the required information from the following query
+        //
+        // exec sp_help tableName
+        //
+        // several tables of data are returned, each with parts of the information required to create the 
+        // table creation script.
 
 		private string tableScript;
 		private string valueScript;

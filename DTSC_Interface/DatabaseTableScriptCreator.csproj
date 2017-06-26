@@ -154,6 +154,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RegistryFunctions.cs" />
+    <Compile Include="ScriptFunctions.cs" />
     <Compile Include="SqlFunctions.cs">
       <SubType>Code</SubType>
     </Compile>

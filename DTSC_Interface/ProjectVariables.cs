@@ -38,5 +38,10 @@ namespace DBTableMover
         /// the type of the current data connection
         /// </summary>
         public static currentConnectionType currentConType;
+
+        /// <summary>
+        /// the filename of the XML file opened by the menu option
+        /// </summary>
+        public static string currentLoadedXmlFileName;
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Windows.Forms;
 using System.Data;
 using System.IO;
 
@@ -11,14 +10,17 @@ namespace DBTableMover
     /// </summary>
     public class XmlFunctions
 	{
+        /// <summary>
+        /// default constructor
+        /// </summary>
 		public XmlFunctions()
 		{
 
 		}
-		DataSet xmlData = new DataSet();
-		string tableName = "";
-		string tableScript = "";
-		string valueScript = "";
+		private DataSet xmlData = new DataSet();
+		private string tableName = "";
+		private string tableScript = "";
+		private string valueScript = "";
 
         /// <summary>
         /// opens an XML file (xml or xsd) and reads the xml schema from the file.  if it's XML it also reads the data.
@@ -27,6 +29,8 @@ namespace DBTableMover
         /// <returns>DataSet with the schema and/or data from the file</returns>
 		public DataSet OpenXmlToDataSet(string newFileName)
 		{
+            try
+            {
                 FileInfo file = new FileInfo(newFileName);
                 if (file.Extension.ToLower() == ".xml")
                 {
@@ -40,6 +44,12 @@ namespace DBTableMover
                     xmlData.ReadXmlSchema(XMLFILE);
                     XMLFILE.Close();
                 }
+                ProjectVariables.currentLoadedXmlFileName = newFileName;
+            }
+            catch(Exception x)
+            {
+                ProjectMethods.WriteLog("OpenXmlToDataSet", x.Message);
+            }
                 return xmlData;
 		}
 
@@ -49,7 +59,7 @@ namespace DBTableMover
         /// <param name="fileName"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-		public string CreateTableScript(string fileName, string tableName)
+		public string CreateTableScript(string tableName)
 		{
 			this.tableScript = "";
 			try
@@ -60,7 +70,7 @@ namespace DBTableMover
 				int columnLen = 0;
 				string columnNull = "";
 				// start building script
-				this.xmlData = this.OpenXmlToDataSet(fileName);
+				this.xmlData = this.OpenXmlToDataSet(ProjectVariables.currentLoadedXmlFileName);
 				this.tableName = tableName;
 				// insert drop and create scripts
 				tableScript = "if exists(select name from sysobjects where name='" + tableName + "' and type='U')\r\nBEGIN\r\ndrop table " + tableName + "\r\nEND\r\nGO\r\n\r\n";
@@ -185,14 +195,14 @@ namespace DBTableMover
         /// <param name="fileName">name of the XML file to write scripts for</param>
         /// <param name="tableName">name of the selected table</param>
         /// <returns></returns>
-		public string CreateValueScript(string fileName, string tableName)
+		public string CreateValueScript(string tableName)
 		{
 
 			this.valueScript = "";
 			try
 			{
 				// grab data
-				this.xmlData = this.OpenXmlToDataSet(fileName);
+				this.xmlData = this.OpenXmlToDataSet(ProjectVariables.currentLoadedXmlFileName);
 				this.tableName = tableName;
 				///now start creating the script for the values
 				// check table for data  

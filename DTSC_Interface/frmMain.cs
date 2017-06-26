@@ -39,10 +39,8 @@ namespace DBTableMover
 
         private ProjectInfo inf = new ProjectInfo();
         private string scriptFileName = "";
-        private string tableScript = "";
         private MenuItem miDCSep1;
         private MenuItem miDCSep2;
-        private string valueScript = "";
 
         /// <summary>
         /// main constructor
@@ -597,72 +595,6 @@ namespace DBTableMover
         }
 
         /// <summary>
-        /// creates a table creation script for the passed in table name in the currently connected database.
-        /// </summary>
-        /// <param name="tableName"></param>
-        private void CreateTableScript(string tableName)
-        {
-            try
-            {
-                switch (ProjectVariables.currentConType)
-                {
-                    case currentConnectionType.MSSQL:
-                        {
-                            SqlFunctions sqlFun = new SqlFunctions();
-                            tableScript = sqlFun.CreateTableScript(tableName);
-                            break;
-                        }
-                    case currentConnectionType.XML:
-                        {
-                            XmlFunctions xmlFun = new XmlFunctions();
-                            tableScript = xmlFun.CreateTableScript(this.ofGetXML.FileName, tableName);
-                            break;
-                        }
-                    case currentConnectionType.MySQL:
-                        {
-                            MySQLFunctions mysqlFun = new MySQLFunctions();
-                            tableScript = mysqlFun.CreateTableScript(tableName);
-                            break;
-                        }
-                }
-            }
-            catch (Exception x)
-            {
-                WriteLog(x.Message);
-            }
-        }
-
-        /// <summary>
-        /// creates an insert script for each row in the passed in table
-        /// </summary>
-        /// <param name="tableName"></param>
-        private void CreateValueScript(string tableName)
-        {
-            try
-            {
-                switch (ProjectVariables.currentConType)
-                {
-                    case currentConnectionType.MSSQL:
-                        {
-                            SqlFunctions sqlFun = new SqlFunctions();
-                            valueScript = sqlFun.CreateValueScript(tableName);
-                            break;
-                        }
-                    case currentConnectionType.XML:
-                        {
-                            XmlFunctions xmlFun = new XmlFunctions();
-                            valueScript = xmlFun.CreateValueScript(this.ofGetXML.FileName, tableName);
-                            break;
-                        }
-                }
-            }
-            catch (Exception x)
-            {
-                WriteLog(x.Message);
-            }
-        }
-
-        /// <summary>
         /// initiates the generation of the selected scripts and outputs the resultant string to a file
         /// </summary>
         /// <param name="scriptType">the user selected Script Type</param>
@@ -676,21 +608,19 @@ namespace DBTableMover
                 {
                     case ScriptType.TableStructure:
                         {
-                            CreateTableScript(tableName);
-                            scriptValue += tableScript;
+                            
+                            scriptValue += ScriptFunctions.CreateTableScript(tableName);
                             break;
                         }
                     case ScriptType.ValuesOnly:
                         {
-                            CreateValueScript(tableName);
-                            scriptValue += valueScript;
+                            
+                            scriptValue += ScriptFunctions.CreateValueScript(tableName);
                             break;
                         }
                     case ScriptType.TableAndValues:
                         {
-                            CreateTableScript(tableName);
-                            CreateValueScript(tableName);
-                            scriptValue += tableScript + valueScript;
+                            scriptValue += ScriptFunctions.CreateTableScript(tableName) + ScriptFunctions.CreateValueScript(tableName);
                             break;
                         }
                     case ScriptType.DatabaseTableStructure:
@@ -698,8 +628,7 @@ namespace DBTableMover
                             foreach (MenuItem mi in this.miTables.MenuItems)
                             {
                                 string TableToScript = mi.Text.ToString();
-                                CreateTableScript(TableToScript);
-                                scriptValue += tableScript;
+                                scriptValue += ScriptFunctions.CreateTableScript(TableToScript);
                             }
                             break;
                         }
@@ -708,14 +637,12 @@ namespace DBTableMover
                             foreach (MenuItem mi in this.miTables.MenuItems)
                             {
                                 string TableToScript = mi.Text.ToString();
-                                CreateTableScript(TableToScript);
-                                CreateValueScript(TableToScript);
-                                scriptValue += tableScript + valueScript;
+                                scriptValue += ScriptFunctions.CreateTableScript(TableToScript) + ScriptFunctions.CreateValueScript(TableToScript);
                             }
                             break;
                         }
                 }
-                // this function writes a log of important info and is useful for debugging
+                // opens an IO stream and writes the generated string to file
                 StreamWriter scriptFile = new StreamWriter(scriptFileName, false);
                 scriptFile.Write(scriptValue);
                 scriptFile.Flush();

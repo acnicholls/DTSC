@@ -84,7 +84,7 @@ namespace DBTableMover
                 tableScript += "create table [dbo].[" + tableName + "]\r(\n";
                 // find identity column
                 string[] keyName = CheckForIdentity();
-                if(keyName != null)
+                if(keyName != new string[0])
                 {
                     seed = 1;
                     inc = 1;
@@ -176,18 +176,62 @@ namespace DBTableMover
                             }
                         case "enum":
                             {
-                                // requires a constraint and a data type, with max length and/or precision/scale
-                                // MSSQL does not have an "enum" data type
-                                // skip this column for now
-                                continue;
+                                // MSSQL does not have an "enum" data type, instead we use a CHECK constraint
+                                // step 1 - find all the enumerations
+                                string colType = row["COLUMN_TYPE"].ToString();
+                                // remove the part "enum(" from the start
+                                colType = colType.Substring(5);
+                                // remove ")" from the end
+                                colType = colType.Substring(0, colType.Length - 1);
+                                // remove any quotes
+                                colType = colType.Replace("'","");
+                                // split the remainder into individual variables
+                                string[] enums = colType.Split(',');
+                                // step 2 - find the data type of the enumerations
+                                bool columnHasCharData = false;
+                                foreach (string s in enums)
+                                {
+                                    if (!IsNumeric(s))
+                                        columnHasCharData = true;
+                                }
+                                if (columnHasCharData)
+                                    columnOnly += "[char]";
+                                else
+                                    columnOnly += "[int]";
+                                // step 3 - find the longest one
+                                int maxLength = 0;
+                                foreach(string s in enums)
+                                {
+                                    if (s.Length > maxLength)
+                                        maxLength = s.Length;
+                                }
+                                columnOnly += "(" + maxLength.ToString() + ")";
+                                // step 4 - create the column script
+                                columnOnly += " " + columnNull + " CHECK (" + columnName + " IN (";
+                                int count = 0;
+                                foreach(string s in enums)
+                                {
+                                    if (count < enums.Length - 1)
+                                        columnOnly += "'" + s + "',";
+                                    else
+                                        columnOnly += "'" + s + "'";
+                                    count++;
+                                }
+                                columnOnly += "))";
+                                break;
                             }
                    }
-                    if (CheckForKeyRow(keyName, columnName))
-                        columnOnly += " IDENTITY(" + seed + "," + inc + ")";
-                    if (columnColl == "")
-                        columnOnly += " " + columnNull;
-                    else
-                        columnOnly += " COLLATE " + columnColl + " " + columnNull;
+                    if (columnType != "enum")
+                    {
+                        // build the identity part of the script
+                        if (CheckForKeyRow(keyName, columnName))
+                            columnOnly += " IDENTITY(" + seed + "," + inc + ")";
+                        // add the collation and NULLness of the column
+                        if (columnColl == "")
+                            columnOnly += " " + columnNull;
+                        else
+                            columnOnly += " COLLATE " + columnColl + " " + columnNull;
+                    }
                     // add one to the number of columns
                     cols++;
                     // add column text to script
@@ -211,6 +255,26 @@ namespace DBTableMover
                     conMySQLConnection.Close();
             }
             return tableScript;
+        }
+
+        /// <summary>
+        /// checks to see if the string passed can be converted to an Integer
+        /// </summary>
+        /// <param name="stringToCheck">string to convert to integer</param>
+        /// <returns>true/false</returns>
+        private bool IsNumeric(string stringToCheck)
+        {
+            bool returnValue = false;
+            try
+            {
+                Convert.ToInt32(stringToCheck);
+                returnValue = true;
+            }
+            catch
+            {
+                returnValue = false;
+            }
+            return returnValue;
         }
 
         /// <summary>

@@ -295,7 +295,7 @@ namespace DBTableMover
                 // get ID columns
                 string[] keyrows = CheckForIdentity();
                 // create value row scripts
-                this.dsTable.Clear();
+                this.dsTable.Tables.Clear();
                 comm = conMySQLConnection.CreateCommand();
                 comm.CommandType = CommandType.Text;
                 comm.CommandText = "select * from " + tableName;
@@ -345,6 +345,7 @@ namespace DBTableMover
                             if (n > 0)
                                 valueScript += ",";
                             string colType = col.DataType.ToString();
+                            WriteLog("Col Name : " + col.ColumnName.ToString());
                             WriteLog("colType :" + colType);
                             WriteLog("ToString : " + col.ToString());
                             WriteLog(" \n");
@@ -353,7 +354,77 @@ namespace DBTableMover
                             else
                             {
                                 // depending on dataType, set up the text that will insert the correct value
+                                #region datatype DataFixes
+                            switch(colType)
+                                {
+                                    case "System.DateTime":
+                                        {
+                                            DateTime dbdate = Convert.ToDateTime(row[r]);
+                                            valueScript += "'" + dbdate.ToString("yyyyMMdd HH:mm:ss") + "'";
+                                            break;
+                                        }
+                                    case "System.Int64":
+                                        {
+                                            valueScript += Convert.ToInt64(row[r]);
+                                            break;
+                                        }
+                                    case "System.Int32":
+                                        {
+                                            valueScript += Convert.ToInt32(row[r]);
+                                            break;
+                                        }
+                                    case "System.Int16":
+                                        {
+                                            valueScript += Convert.ToInt16(row[r]);
+                                            break;
+                                        }
+                                    case "System.Decimal":
+                                        {
+                                            valueScript += Convert.ToDecimal(row[r]);
+                                            break;
+                                        }
+                                    case "System.Double":
+                                        {
+                                            valueScript += Convert.ToDouble(row[r]);
+                                            break;
+                                        }
+                                    case "System.Single":
+                                        {
+                                            valueScript += Convert.ToSingle(row[r]);
+                                            break;
+                                        }
+                                    case "System.Byte":
+                                        {
+                                            valueScript += "'" + Convert.ToByte(row[r]) + "'";
+                                            break;
+                                        }
+                                    case "System.Byte[]":
+                                        {
+                                            valueScript += "0x";
+                                            string stringValue = Convert.ToString(row[r]);
+                                            foreach (char b in stringValue)
+                                            {
+                                                valueScript += Convert.ToByte(b);
+                                            }
+                                            break;
+                                        }
+                                    case "System.String":
+                                    case "System.Boolean":
+                                    case "System.Object":
+                                        {
+                                            string tempValue = row[r].ToString();
+                                            tempValue = tempValue.Replace("'", "''");
+                                            valueScript += "'" + tempValue.Trim() + "'";
+                                            break;
+                                        }
+                                    case "System.UInt64":
+                                        {
+                                            valueScript += Convert.ToUInt64(row[r]);
+                                            break;
+                                        }
 
+                                }
+                                #endregion
                             }
                             n++;
                         }

@@ -118,16 +118,27 @@ namespace DBTableMover
                     // start the column's script
                     columnOnly += "[" + columnName + "] ";
                     // now get the column's official type
-                    switch (columnType)
+                    switch (columnType.ToLower())
                     {
-                        case "varchar":
-                        case "nchar":
-                        case "nvarchar":
                         case "char":
-                        case "binary":
-                        case "varbinary":
                             {
-                                columnOnly += "[" + columnType + "]";
+                                columnOnly += "[nchar]";
+                                // now set the max characters allowed
+                                if (columnLen == -1)
+                                    columnOnly += "(MAX)";
+                                else
+                                    columnOnly += "(" + columnLen + ")";
+                                break;
+
+                            }
+                        case "varchar":
+                        case "tinytext":
+                        case "mediumtext":
+                        case "longtext":
+                        case "text":
+                        case "json":
+                            {
+                                columnOnly += "[nvarchar]";
                                 // now set the max characters allowed
                                 if (columnLen == -1)
                                     columnOnly += "(MAX)";
@@ -135,33 +146,115 @@ namespace DBTableMover
                                     columnOnly += "(" + columnLen + ")";
                                 break;
                             }
-                        case "text":
-                        case "ntext":
-                        case "datetime":
-                        case "uniqueidentifier":
-                        case "bit":
-                        case "xml":
-                        case "image":
-                        case "smalldatetime":
-                        case "timestamp":
+                        case "binary":
+                        case "varbinary":
+                        case "blob":
+                        case "tinyblob":
+                        case "mediumblob":
+                        case "longblob":
                             {
-                                columnOnly += "[" + columnType + "]";
-
+                                columnOnly += "[varbinary]";
+                                // now set the max characters allowed
+                                if (columnLen == -1)
+                                    columnOnly += "(MAX)";
+                                else
+                                    columnOnly += "(" + columnLen + ")";
                                 break;
                             }
-                        case "numeric":
+                        case "datetime":
+                            {
+                                columnOnly += "[datetime2]";
+                                break;
+                            }
+                        case "timestamp":
+                            {
+                                columnOnly += "[smalldatetime]";
+                                break;
+                            }
+                        case "date":
+                            {
+                                columnOnly += "[date]";
+                                break;
+                            }
+                        case "time":
+                            {
+                                columnOnly += "[time]";
+                                break;
+                            }
+                        case "bit":
+                            {
+                                columnOnly += "[bit]";
+                                break;
+                            }
+
+                        case "decimal":
+                            {
+                                columnOnly += "[decimal]";
+                                // now set the precision and scale
+                                if (columnPrec == 0 & columnScale == 0)
+                                    break;
+                                else if (columnPrec > 0 & columnScale == 0)
+                                    columnOnly += "(" + columnPrec.ToString() + ")";
+                                else if (columnPrec > 0 & columnScale > 0)
+                                    columnOnly += "(" + columnPrec.ToString() + "," + columnScale.ToString() + ")";
+                                break;
+                            }
+
                         case "double":
-                        case "single":
                         case "float":
                         case "real":
-                        case "smallmoney":
-                        case "money":
+                            {
+                                columnOnly += "[float]";
+                                // now set the precision and scale
+                                if (columnPrec == 0 & columnScale == 0)
+                                    break;
+                                else if (columnPrec > 0 & columnScale == 0)
+                                    columnOnly += "(" + columnPrec.ToString() + ")";
+                                else if (columnPrec > 0 & columnScale > 0)
+                                    columnOnly += "(" + columnPrec.ToString() + "," + columnScale.ToString() + ")";
+                                break;
+                            }
                         case "tinyint":
+                            {
+                                columnOnly += "[tinyint]";
+                                // now set the precision and scale
+                                if (columnPrec == 0 & columnScale == 0)
+                                    break;
+                                else if (columnPrec > 0 & columnScale == 0)
+                                    columnOnly += "(" + columnPrec.ToString() + ")";
+                                else if (columnPrec > 0 & columnScale > 0)
+                                    columnOnly += "(" + columnPrec.ToString() + "," + columnScale.ToString() + ")";
+                                break;
+                            }
                         case "smallint":
+                        case "year":
+                            {
+                                columnOnly += "[smallint]";
+                                // now set the precision and scale
+                                if (columnPrec == 0 & columnScale == 0)
+                                    break;
+                                else if (columnPrec > 0 & columnScale == 0)
+                                    columnOnly += "(" + columnPrec.ToString() + ")";
+                                else if (columnPrec > 0 & columnScale > 0)
+                                    columnOnly += "(" + columnPrec.ToString() + "," + columnScale.ToString() + ")";
+                                break;
+                            }
                         case "int":
+                        case "mediumint":
+                            {
+                                columnOnly += "[int]";
+                                // now set the precision and scale
+                                if (columnPrec == 0 & columnScale == 0)
+                                    break;
+                                else if (columnPrec > 0 & columnScale == 0)
+                                    columnOnly += "(" + columnPrec.ToString() + ")";
+                                else if (columnPrec > 0 & columnScale > 0)
+                                    columnOnly += "(" + columnPrec.ToString() + "," + columnScale.ToString() + ")";
+                                break;
+                            }
                         case "bigint":
                             {
-                                columnOnly += "[" + columnType + "]";
+                                columnOnly += "[bigint]";
                                 // now set the precision and scale
                                 if (columnPrec == 0 & columnScale == 0)
                                     break;
@@ -354,6 +447,15 @@ namespace DBTableMover
                             else
                             {
                                 // depending on dataType, set up the text that will insert the correct value
+                                // current problem datatypes
+                                // date - detected as System.DateTime
+                                // mediumint - detected as System.Int32
+                                // decimal - detected as System.Decimal
+                                // numeric only ENUM - detected as System.String
+                                // blob  - detected as System.Byte[]
+                                // medium text - detected as System.String
+                                // year - detected as System.Int32
+                                // json - detected as System.String
                                 #region datatype DataFixes
                             switch(colType)
                                 {
@@ -420,6 +522,11 @@ namespace DBTableMover
                                     case "System.UInt64":
                                         {
                                             valueScript += Convert.ToUInt64(row[r]);
+                                            break;
+                                        }
+                                    case "System.SByte":
+                                        {
+                                            valueScript += Convert.ToInt16(row[r]);
                                             break;
                                         }
 

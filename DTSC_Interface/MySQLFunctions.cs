@@ -59,7 +59,7 @@ namespace DBTableMover
                 int seed = 0;
                 int inc = 0;
                 string columnType = "";
-                int columnLen = 0;
+                long columnLen = 0;
                 string columnNull = "";
                 string columnColl = "";
                 int columnPrec = 0;
@@ -96,7 +96,7 @@ namespace DBTableMover
                     columnName = row["COLUMN_NAME"].ToString();
                     columnType = row["DATA_TYPE"].ToString();
                     if (row["CHARACTER_MAXIMUM_LENGTH"].ToString() != "")
-                        columnLen = Convert.ToInt32(row["CHARACTER_MAXIMUM_LENGTH"].ToString());
+                        columnLen = Convert.ToInt64(row["CHARACTER_MAXIMUM_LENGTH"].ToString());
                     else
                         columnLen = 0;
                     if (row["NUMERIC_PRECISION"].ToString() != "")
@@ -122,9 +122,9 @@ namespace DBTableMover
                     {
                         case "char":
                             {
-                                columnOnly += "[nchar]";
+                                columnOnly += "[char]";
                                 // now set the max characters allowed
-                                if (columnLen == -1)
+                                if (columnLen > 8000)
                                     columnOnly += "(MAX)";
                                 else
                                     columnOnly += "(" + columnLen + ")";
@@ -140,7 +140,7 @@ namespace DBTableMover
                             {
                                 columnOnly += "[nvarchar]";
                                 // now set the max characters allowed
-                                if (columnLen == -1)
+                                if (columnLen > 4000)
                                     columnOnly += "(MAX)";
                                 else
                                     columnOnly += "(" + columnLen + ")";
@@ -423,7 +423,7 @@ namespace DBTableMover
                 // now grab the values and build the SQL
                 foreach (DataRow row in dsTable.Tables[0].Rows)
                 {
-                    int r = 0;
+                    int r = 0;  // column in the DataRow
                     valueScript += "INSERT INTO [dbo].[" + tableName + "] (" + columnNames + ") VALUES (";
                     int n = 0;  // number of columns added to script
                     foreach (DataColumn col in row.Table.Columns)
@@ -446,7 +446,7 @@ namespace DBTableMover
                                 valueScript += "NULL";
                             else
                             {
-                                // depending on dataType, set up the text that will insert the correct value
+                                // depending on dataType, set up the text that will insert the value correctly
                                 // current problem datatypes
                                 // date - detected as System.DateTime
                                 // mediumint - detected as System.Int32
@@ -529,7 +529,6 @@ namespace DBTableMover
                                             valueScript += Convert.ToInt16(row[r]);
                                             break;
                                         }
-
                                 }
                                 #endregion
                             }

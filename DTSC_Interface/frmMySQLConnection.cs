@@ -29,6 +29,7 @@ namespace DBTableMover
                 builder.Add(KeyName.Database.ToString(), txtDatabase.Text.Trim());
                 builder.Add(KeyName.UID.ToString(), txtUser.Text.Trim());
                 builder.Add(KeyName.PWD.ToString(), txtPassword.Text.Trim());
+                builder.Add("Allow Zero DateTime", true);
                 builder.Add("Port", 3306);
                 return builder.GetConnectionString(true);
             }

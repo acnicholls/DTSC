@@ -2,7 +2,4 @@
 Database Table Script Creator
 
 ## What it does
-DTSC was originally written to simplify the creation of a MSSQL database from an XML file.
-
-## How it does this
-DTSC takes the XML data and creates basic table create queries, as well as insert queries for data.
+DTSC connects to an XML file, MSSQL Database or MySQL Database and lists the tables as Menu Items.  The user then selects a table, and/or a script type, and an output flavour.  DTSC then creates a CREATE TABLE script and/or INSERT INTO scripts for each item, in the database flavour selected.

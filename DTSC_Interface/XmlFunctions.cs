@@ -55,12 +55,42 @@ namespace DBTableMover
 		}
 
         /// <summary>
+        /// figures out which type of script to create and calls the appropriate method
+        /// </summary>
+        /// <param name="tableName">name of the table to create the script for</param>
+        /// <param name="outputType">type of database to create the script for</param>
+        /// <returns>string</returns>
+        public string CreateTableScript(string tableName, ScriptOutputType outputType)
+        {
+            switch(outputType)
+            {
+                case ScriptOutputType.MsSQL:
+                    {
+                        return CreateMSSQLTableScript(tableName);
+                    }
+                case ScriptOutputType.MySQL:
+                    {
+                        return CreateMySQLTableScript(tableName);
+                    }
+                default:
+                    {
+                        return string.Empty;
+                    }
+            }
+        }
+
+        private string CreateMySQLTableScript(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// creates an SQL Table Creation script for the passed in table name
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="tableName"></param>
         /// <returns></returns>
-		public string CreateTableScript(string tableName)
+        private string CreateMSSQLTableScript(string tableName)
 		{
 			this.tableScript = "";
 			try
@@ -191,12 +221,42 @@ namespace DBTableMover
 		}
 
         /// <summary>
+        /// figures out which type of script to create and calls the appropriate method
+        /// </summary>
+        /// <param name="tableName">name of the table to create the script for</param>
+        /// <param name="outputType">type of database to create the script for</param>
+        /// <returns>string</returns>
+        public string CreateValueScript(string tableName, ScriptOutputType outputType)
+        {
+            switch (outputType)
+            {
+                case ScriptOutputType.MsSQL:
+                    {
+                        return CreateMSSQLValueScript(tableName);
+                    }
+                case ScriptOutputType.MySQL:
+                    {
+                        return CreateMySQLValueScript(tableName);
+                    }
+                default:
+                    {
+                        return string.Empty;
+                    }
+            }
+        }
+
+        private string CreateMySQLValueScript(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// creates an insert script for each row in the selected table
         /// </summary>
         /// <param name="fileName">name of the XML file to write scripts for</param>
         /// <param name="tableName">name of the selected table</param>
         /// <returns></returns>
-		public string CreateValueScript(string tableName)
+        private string CreateMSSQLValueScript(string tableName)
 		{
 
 			this.valueScript = "";

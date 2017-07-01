@@ -9,10 +9,10 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("Database Table Script Creator")]
 [assembly: AssemblyDescription("Creates SQL Scripts for moving database objects between development and production servers.")]
 [assembly: AssemblyConfiguration("C Sharp for Windows")]
-[assembly: AssemblyCompany("acnicholls.com")]
+[assembly: AssemblyCompany("acnicholls")]
 [assembly: AssemblyProduct("DTSC.exe")]
-[assembly: AssemblyCopyright("acnicholls.com 2008")]
-[assembly: AssemblyTrademark("acnicholls.com")]
+[assembly: AssemblyCopyright("Anthony Nicholls 2008")]
+[assembly: AssemblyTrademark("acnicholls")]
 [assembly: AssemblyCulture("")]	
 
 //
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.3.1.0")]
+[assembly: AssemblyVersion("1.4.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

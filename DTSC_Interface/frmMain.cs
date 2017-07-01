@@ -40,6 +40,8 @@ namespace DBTableMover
         private ProjectInfo inf = new ProjectInfo();
         private string scriptFileName = "";
         private MenuItem miDCSep1;
+        private ComboBox cboOutputType;
+        private Label label2;
         private MenuItem miDCSep2;
 
         /// <summary>
@@ -85,8 +87,10 @@ namespace DBTableMover
             this.miOptions = new System.Windows.Forms.MenuItem();
             this.miDataConnection = new System.Windows.Forms.MenuItem();
             this.miEditConnection = new System.Windows.Forms.MenuItem();
+            this.miDCSep1 = new System.Windows.Forms.MenuItem();
             this.miMySQLConnection = new System.Windows.Forms.MenuItem();
             this.miEditMySQLConnection = new System.Windows.Forms.MenuItem();
+            this.miDCSep2 = new System.Windows.Forms.MenuItem();
             this.miXmlConnection = new System.Windows.Forms.MenuItem();
             this.miTables = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
@@ -98,8 +102,8 @@ namespace DBTableMover
             this.cboScriptContents = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.ofGetXML = new System.Windows.Forms.OpenFileDialog();
-            this.miDCSep1 = new System.Windows.Forms.MenuItem();
-            this.miDCSep2 = new System.Windows.Forms.MenuItem();
+            this.cboOutputType = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -149,6 +153,11 @@ namespace DBTableMover
             this.miEditConnection.Text = "&Edit Existing MSSQL Connection...";
             this.miEditConnection.Click += new System.EventHandler(this.miEditMSSQLConnection_Click);
             // 
+            // miDCSep1
+            // 
+            this.miDCSep1.Index = 2;
+            this.miDCSep1.Text = "-";
+            // 
             // miMySQLConnection
             // 
             this.miMySQLConnection.Index = 3;
@@ -160,6 +169,11 @@ namespace DBTableMover
             this.miEditMySQLConnection.Index = 4;
             this.miEditMySQLConnection.Text = "Edit E&xisting MySQL Connection...";
             this.miEditMySQLConnection.Click += new System.EventHandler(this.miEditMySQLConnection_Click);
+            // 
+            // miDCSep2
+            // 
+            this.miDCSep2.Index = 5;
+            this.miDCSep2.Text = "-";
             // 
             // miXmlConnection
             // 
@@ -200,7 +214,7 @@ namespace DBTableMover
             this.btnCreate.Location = new System.Drawing.Point(544, 336);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(168, 23);
-            this.btnCreate.TabIndex = 1;
+            this.btnCreate.TabIndex = 3;
             this.btnCreate.Text = "Create Script >>";
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
@@ -223,14 +237,14 @@ namespace DBTableMover
             "Table and Values",
             "All Tables Only",
             "All Tables and Values"});
-            this.cboScriptContents.Location = new System.Drawing.Point(400, 336);
+            this.cboScriptContents.Location = new System.Drawing.Point(173, 336);
             this.cboScriptContents.Name = "cboScriptContents";
             this.cboScriptContents.Size = new System.Drawing.Size(128, 21);
-            this.cboScriptContents.TabIndex = 2;
+            this.cboScriptContents.TabIndex = 1;
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(304, 340);
+            this.label1.Location = new System.Drawing.Point(77, 340);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(96, 16);
             this.label1.TabIndex = 3;
@@ -241,20 +255,33 @@ namespace DBTableMover
             this.ofGetXML.Filter = "(*.xml)|Xml Files|(*.*)|All Files";
             this.ofGetXML.Title = "Create XML Connection...";
             // 
-            // miDCSep1
+            // cboOutputType
             // 
-            this.miDCSep1.Index = 2;
-            this.miDCSep1.Text = "-";
+            this.cboOutputType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboOutputType.FormattingEnabled = true;
+            this.cboOutputType.Items.AddRange(new object[] {
+            "MsSQL",
+            "MySQL"});
+            this.cboOutputType.Location = new System.Drawing.Point(414, 336);
+            this.cboOutputType.Name = "cboOutputType";
+            this.cboOutputType.Size = new System.Drawing.Size(121, 21);
+            this.cboOutputType.TabIndex = 2;
             // 
-            // miDCSep2
+            // label2
             // 
-            this.miDCSep2.Index = 5;
-            this.miDCSep2.Text = "-";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(323, 340);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(85, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Create Script in :";
             // 
             // frmMain
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.ClientSize = new System.Drawing.Size(728, 367);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.cboOutputType);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cboScriptContents);
             this.Controls.Add(this.btnCreate);
@@ -267,6 +294,7 @@ namespace DBTableMover
             this.Load += new System.EventHandler(this.frmMain_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
         #endregion
@@ -602,25 +630,39 @@ namespace DBTableMover
         {
             string tableName = this.dataGrid1.CaptionText.ToString();
             string scriptValue = "";
+            ScriptOutputType outputType = new ScriptOutputType();
             try
             {
+                switch(cboOutputType.SelectedText.ToString())
+                {
+                    case "MsSQL":
+                        {
+                            outputType = ScriptOutputType.MsSQL;
+                            break;
+                        }
+                    case "MySQL":
+                        {
+                            outputType = ScriptOutputType.MySQL;
+                            break;
+                        }
+                }
                 switch (scriptType)
                 {
                     case ScriptType.TableStructure:
                         {
                             
-                            scriptValue += ScriptFunctions.CreateTableScript(tableName);
+                            scriptValue += ScriptFunctions.CreateTableScript(tableName, outputType);
                             break;
                         }
                     case ScriptType.ValuesOnly:
                         {
                             
-                            scriptValue += ScriptFunctions.CreateValueScript(tableName);
+                            scriptValue += ScriptFunctions.CreateValueScript(tableName, outputType);
                             break;
                         }
                     case ScriptType.TableAndValues:
                         {
-                            scriptValue += ScriptFunctions.CreateTableScript(tableName) + ScriptFunctions.CreateValueScript(tableName);
+                            scriptValue += ScriptFunctions.CreateTableScript(tableName, outputType) + ScriptFunctions.CreateValueScript(tableName, outputType);
                             break;
                         }
                     case ScriptType.DatabaseTableStructure:
@@ -628,7 +670,7 @@ namespace DBTableMover
                             foreach (MenuItem mi in this.miTables.MenuItems)
                             {
                                 string TableToScript = mi.Text.ToString();
-                                scriptValue += ScriptFunctions.CreateTableScript(TableToScript);
+                                scriptValue += ScriptFunctions.CreateTableScript(TableToScript, outputType);
                             }
                             break;
                         }
@@ -637,7 +679,7 @@ namespace DBTableMover
                             foreach (MenuItem mi in this.miTables.MenuItems)
                             {
                                 string TableToScript = mi.Text.ToString();
-                                scriptValue += ScriptFunctions.CreateTableScript(TableToScript) + ScriptFunctions.CreateValueScript(TableToScript);
+                                scriptValue += ScriptFunctions.CreateTableScript(TableToScript, outputType) + ScriptFunctions.CreateValueScript(TableToScript, outputType);
                             }
                             break;
                         }

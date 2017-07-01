@@ -44,11 +44,41 @@ namespace DBTableMover
         private MySql.Data.MySqlClient.MySqlConnection conMySQLConnection = new MySqlConnection(ConnectionStringFunctions.CurrentConnectionString);
 
         /// <summary>
+        /// figures out which type of script to create and calls the appropriate method
+        /// </summary>
+        /// <param name="tableName">name of the table to create the script for</param>
+        /// <param name="outputType">type of database to create the script for</param>
+        /// <returns>string</returns>
+        public string CreateTableScript(string tableName, ScriptOutputType outputType)
+        {
+            switch(outputType)
+            {
+                case ScriptOutputType.MsSQL:
+                    {
+                        return CreateMSSQLTableScript(tableName);
+                    }
+                case ScriptOutputType.MySQL:
+                    {
+                        return CreateMySQLTableScript(tableName);
+                    }
+                default:
+                    {
+                        return string.Empty;
+                    }
+            }
+        }
+
+        private string CreateMySQLTableScript(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// creates the actual script for the passed in table
         /// </summary>
         /// <param name="tableName">table to create a script for</param>
         /// <returns>string</returns>
-        public string CreateTableScript(string tableName)
+        private string CreateMSSQLTableScript(string tableName)
         {
 
             this.tableScript = "";
@@ -279,8 +309,10 @@ namespace DBTableMover
                                 string[] enums = colType.Split(',');
                                 // step 2 - find the data type of the enumerations
                                 bool columnHasCharData = false;
+                                WriteLog("Enum Column");
                                 foreach (string s in enums)
                                 {
+                                    WriteLog("testing : " + s);
                                     if (!IsNumeric(s))
                                         columnHasCharData = true;
                                 }
@@ -368,11 +400,41 @@ namespace DBTableMover
         }
 
         /// <summary>
+        /// figures out which type of script to create and calls the appropriate method
+        /// </summary>
+        /// <param name="tableName">name of the table to create the script for</param>
+        /// <param name="outputType">type of database to create the script for</param>
+        /// <returns>string</returns>
+        public string CreateValueScript(string tableName, ScriptOutputType outputType)
+        {
+            switch (outputType)
+            {
+                case ScriptOutputType.MsSQL:
+                    {
+                        return CreateMSSQLValueScript(tableName);
+                    }
+                case ScriptOutputType.MySQL:
+                    {
+                        return CreateMySQLValueScript(tableName);
+                    }
+                default:
+                    {
+                        return string.Empty;
+                    }
+            }
+        }
+
+        private string CreateMySQLValueScript(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// creates insert scripts for each row in the passed in table
         /// </summary>
         /// <param name="tableName">name of the table to create scripts for</param>
         /// <returns>string</returns>
-        public string CreateValueScript(string tableName)
+        private string CreateMSSQLValueScript(string tableName)
         {
             valueScript = string.Empty;
             try

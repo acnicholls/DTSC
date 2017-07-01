@@ -12,7 +12,8 @@ namespace DBTableMover
         /// creates a table creation script for the passed in table name in the currently connected database.
         /// </summary>
         /// <param name="tableName"></param>
-        public static string CreateTableScript(string tableName)
+        /// <param name="outputType"></param>
+        public static string CreateTableScript(string tableName, ScriptOutputType outputType)
         {
             string tableScript = "";
             try
@@ -22,19 +23,19 @@ namespace DBTableMover
                     case currentConnectionType.MSSQL:
                         {
                             SqlFunctions sqlFun = new SqlFunctions();
-                            tableScript = sqlFun.CreateTableScript(tableName);
+                            tableScript = sqlFun.CreateTableScript(tableName, outputType);
                             break;
                         }
                     case currentConnectionType.XML:
                         {
                             XmlFunctions xmlFun = new XmlFunctions();
-                            tableScript = xmlFun.CreateTableScript(tableName);
+                            tableScript = xmlFun.CreateTableScript(tableName, outputType);
                             break;
                         }
                     case currentConnectionType.MySQL:
                         {
                             MySQLFunctions mysqlFun = new MySQLFunctions();
-                            tableScript = mysqlFun.CreateTableScript(tableName);
+                            tableScript = mysqlFun.CreateTableScript(tableName, outputType);
                             break;
                         }
                 }
@@ -50,7 +51,8 @@ namespace DBTableMover
         /// creates an insert script for each row in the passed in table
         /// </summary>
         /// <param name="tableName"></param>
-        public static string CreateValueScript(string tableName)
+        /// <param name="outputType"></param>
+        public static string CreateValueScript(string tableName, ScriptOutputType outputType)
         {
             string valueScript = "";
             try
@@ -60,19 +62,19 @@ namespace DBTableMover
                     case currentConnectionType.MSSQL:
                         {
                             SqlFunctions sqlFun = new SqlFunctions();
-                            valueScript = sqlFun.CreateValueScript(tableName);
+                            valueScript = sqlFun.CreateValueScript(tableName, outputType);
                             break;
                         }
                     case currentConnectionType.XML:
                         {
                             XmlFunctions xmlFun = new XmlFunctions();
-                            valueScript = xmlFun.CreateValueScript(tableName);
+                            valueScript = xmlFun.CreateValueScript(tableName, outputType);
                             break;
                         }
                     case currentConnectionType.MySQL:
                         {
                             MySQLFunctions mysqlFun = new MySQLFunctions();
-                            valueScript = mysqlFun.CreateValueScript(tableName);
+                            valueScript = mysqlFun.CreateValueScript(tableName, outputType);
                             break;
                         }
 

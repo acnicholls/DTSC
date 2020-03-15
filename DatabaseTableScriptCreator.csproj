@@ -85,7 +85,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationManifest>DatabaseTableScriptCreator.exe.manifest</ApplicationManifest>
+    <ApplicationManifest>dtsc.exe.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <COMReference Include="ADODB">
@@ -170,7 +170,7 @@
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="DatabaseTableScriptCreator.exe.manifest" />
+    <None Include="dtsc.exe.manifest" />
     <None Include="TableData.xsc">
       <DependentUpon>TableData.xsd</DependentUpon>
     </None>

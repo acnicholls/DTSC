@@ -1,0 +1,97 @@
+# This script builds the end user installer for Folder Size Calculator
+# and then uses the installed to build the portal binaries
+# the portal binaries are them compressed and uploaded to the
+# github action as output.
+name: build-release-binaries
+run-name: Release build for ${{ github.event_name }} triggered by ${{ github.triggering_actor }}
+concurrency:
+  group: release-binaries
+on:
+  pull_request:
+    branches:
+      - master
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+env:
+  BUILD_TYPE: Release
+  ENDUSER_INSTALLER_FILE_NAME: DTSC.msi
+jobs:
+  build-release-binaries:
+    runs-on: windows-latest
+    outputs:
+      build-type: ${{ steps.get-build-type.outputs.build-type }}
+      installer-filename: ${{ steps.get-installer-filename.outputs.installer-filename }}
+    steps:
+      - id: get-build-type
+        shell: powershell
+        run: echo "build-type=${{ env.BUILD_TYPE }}" >> $env:GITHUB_OUTPUT
+      - id: get-installer-filename
+        shell: powershell
+        run: echo "installer-filename=${{ env.ENDUSER_INSTALLER_FILE_NAME }}" >> $env:GITHUB_OUTPUT
+
+      # get the latest code from the repo
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # add msbuild and devenv to the PATH variable
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Setup VS Dev Environment
+        uses: seanmiddleditch/gha-setup-vsdevenv@v4
+
+      # display environment variables, for audit purposes
+      - name: Check Environment
+        run: |
+          dir env:
+
+      # setup nuget executable
+      - name: setup Nuget
+        id: setup-nuget
+        uses: nuget/setup-nuget@v1
+
+      # restore nuget dependencies
+      - name: run nuget restore
+        id: run-nuget-restore
+        working-directory: .\src
+        run: nuget restore .\DatabaseTableScriptCreator.sln
+
+      # builds the custom-installer and user-interface before it's own cab
+      - name: Build User Setup MSI
+        id: build-user-interface-setup
+        shell: cmd
+        working-directory: .\src
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          devenv .\DatabaseTableScriptCreator.sln ^
+          /Build ${{ steps.get-build-type.outputs.build-type }} ^
+          /Project DatabaseScriptCreator ^
+          /Log InstallerBuild.log ^
+          /Out InstallerBuild.log ^
+          /NoSplash
+
+      # send build log to github output
+      - name: Upload Build Log
+        id: upload-build-log
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-user-installer-log
+          path: .\InstallerBuild.log
+          retention-days: 5
+
+      - name: Upload Check
+        id: upload-check
+        if: ${{ steps.build-user-interface-setup.outcome != 'success' }}
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('user-installer build failed, no sense continuing...')
+
+      - name: Upload Artifact
+        id: upload-installer
+        if: ${{ steps.build-user-interface-setup.outcome == 'success' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-user-installer-artifact
+          path: DTSCSetup\${{ steps.get-build-type.outputs.build-type }}\${{ steps.get-installer-filename.outputs.installer-filename }}
+          retention-days: 5

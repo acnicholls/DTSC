@@ -1,0 +1,126 @@
+# This script creates a release, builds the master branch and uploads the build
+# results to both github actions store and the Release
+name: create-release-with-asset
+run-name: Tag & Release for ${{ github.event_name }} triggered by ${{ github.triggering_actor }}
+concurrency:
+  group: release-create
+  cancel-in-progress: true
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - README.md
+      - CHANGELOG.md # Should never be edited anyway
+      - .gitignore
+      - .github/**
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      release-asset-upload-url: ${{ steps.create-tag-release.outputs.upload_url }}
+      current-version: ${{ steps.create-tag-release.outputs.version }}
+    steps:
+      # create a tag and a release
+      - name: Create Tag & Release
+        id: create-tag-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: DasBen/release-on-push-action@master
+        with:
+          bump_version_scheme: patch
+          tag_prefix: v
+          use_github_release_notes: true
+          release_name: "Release <RELEASE_TAG>"
+          release_body: "Bug fixes and features for stability of the application."
+
+      # display the output of the release
+      - name: Check Output Parameters
+        id: get-release-outputs
+        run: |
+          echo "Got tag name ${{ steps.create-tag-release.outputs.tag_name }}"
+          echo "Got release version ${{ steps.create-tag-release.outputs.version }}"
+          echo "Upload release artifacts to ${{ steps.create-tag-release.outputs.upload_url }}"
+
+  prepare-upload-asset:
+    runs-on: windows-latest
+    needs: [create-release]
+    steps:
+      # get the latest code from the repo
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # add msbuild and devenv to the PATH variable
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
+      - name: Setup VS Dev Environment
+        uses: seanmiddleditch/gha-setup-vsdevenv@v4
+
+      - name: Replace in files
+        uses: richardrigutins/replace-in-files@v2.1.8
+        with:
+          files: '**\**\AssemblyInfo.cs'
+          search-text: '[assembly: AssemblyVersion("1.3.2.0")]'
+          replacement-text: '[assembly: AssemblyVersion("${{ needs.create-release.outputs.current-version }}")]'
+
+      # restore nuget dependencies
+      - name: run nuget restore
+        id: run-nuget-restore
+        working-directory: .\src
+        run: nuget restore .\DatabaseTableScriptCreator.sln
+
+      # builds the custom-installer and user-interface before it's own cab
+      - name: Build User Setup MSI
+        id: build-user-installer
+        shell: cmd
+        working-directory: .\src
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          devenv .\DatabaseTableScriptCreator.sln ^
+          /Build RELEASE ^
+          /Project DatabaseScriptCreator ^
+          /Log InstallerBuild.log ^
+          /Out InstallerBuild.log ^
+          /NoSplash
+
+      # send build log to github output
+      - name: Upload Build Log
+        id: upload-build-log
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-installer-log
+          path: ${{ github.workspace }}\InstallerBuild.log
+          retention-days: 5
+
+      # check for build success before continuing
+      - name: Upload Check
+        id: upload-check
+        if: ${{ steps.build-user-installer.outcome != 'success' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.setFailed('executable build failed, no sense continuing...')
+
+      # send build output to github output
+      - name: Upload Build Artifact
+        id: upload-build-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DTSC.msi
+          path: ${{ github.workspace }}\DTSCSetup\Release\DTSC.msi
+          retention-days: 5
+
+      # upload build output to release
+      - name: Upload Release Asset
+        id: upload-release-asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ needs.create-release.outputs.release-asset-upload-url }}
+          asset_path: ${{ github.workspace }}\DTSCSetup\Release\DTSC.msi
+          asset_name: DTSC.msi
+          asset_content_type: application/x-ms-installer

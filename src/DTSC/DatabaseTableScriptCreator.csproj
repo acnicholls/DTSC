@@ -123,61 +123,42 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enums.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="frmAbout.cs">
+    <Compile Include="DatabaseFunctions\SqlFunctions.cs" />
+    <Compile Include="DatabaseFunctions\XmlFunctions.cs" />
+    <Compile Include="Enums\Enums.cs" />
+    <Compile Include="Forms\frmAbout.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMain.cs">
+    <Compile Include="Forms\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Licence.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ProjectInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ProjectMethods.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ProjectVariables.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SqlFunctions.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="ProjectFunctions\ProjectInfo.cs" />
+    <Compile Include="ProjectFunctions\ProjectMethods.cs" />
+    <Compile Include="ProjectFunctions\ProjectVariables.cs" />
+    <Compile Include="Schemas\TableData.Designer.cs" />
     <Compile Include="Start.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TableData.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TableData.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="XmlFunctions.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Content Include="ico_dsuiext0032.ico" />
-    <Content Include="TableData.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>TableData.Designer.cs</LastGenOutput>
-    </Content>
-    <EmbeddedResource Include="frmAbout.resx">
+    <EmbeddedResource Include="Forms\frmAbout.resx">
       <DependentUpon>frmAbout.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMain.resx">
+    <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="dtsc.exe.manifest" />
-    <None Include="TableData.xsc">
+    <None Include="Schemas\TableData.xsc">
       <DependentUpon>TableData.xsd</DependentUpon>
     </None>
-    <None Include="TableData.xss">
+    <None Include="Schemas\TableData.xsd" />
+    <None Include="Schemas\TableData.xss">
       <DependentUpon>TableData.xsd</DependentUpon>
     </None>
-    <None Include="TableData.xsx">
+    <None Include="Schemas\TableData.xsx">
       <DependentUpon>TableData.xsd</DependentUpon>
     </None>
   </ItemGroup>
@@ -188,6 +169,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent />

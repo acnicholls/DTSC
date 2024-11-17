@@ -65,7 +65,7 @@ jobs:
         run: |
           devenv .\DatabaseTableScriptCreator.sln ^
           /Build ${{ steps.get-build-type.outputs.build-type }} ^
-          /Project DatabaseScriptCreator ^
+          /Project DatabaseTableScriptCreatorInstaller ^
           /Log InstallerBuild.log ^
           /Out InstallerBuild.log ^
           /NoSplash

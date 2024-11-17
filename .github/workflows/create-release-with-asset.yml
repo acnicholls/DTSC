@@ -85,7 +85,7 @@ jobs:
         run: |
           devenv .\DatabaseTableScriptCreator.sln ^
           /Build RELEASE ^
-          /Project DatabaseScriptCreator ^
+          /Project DatabaseTableScriptCreatorInstaller ^
           /Log InstallerBuild.log ^
           /Out InstallerBuild.log ^
           /NoSplash

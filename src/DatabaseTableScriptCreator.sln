@@ -4,7 +4,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseTableScriptCreator", "DTSC\DatabaseTableScriptCreator.csproj", "{D603BC53-B58A-4894-864C-A266CEB428CE}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DatabaseTableScriptCreatorInstaller", "DTSCSetup\DatabaseScriptCreator.vdproj", "{F069400B-1338-4548-A520-45CCA007279A}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "DatabaseTableScriptCreatorInstaller", "DTSCSetup\DatabaseTableScriptCreatorInstaller.vdproj", "{F069400B-1338-4548-A520-45CCA007279A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "..\Resources", "{F7DD86AD-ABB4-4720-BACF-747F7E021E17}"
 	ProjectSection(SolutionItems) = preProject

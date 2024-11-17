@@ -52,10 +52,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 4.5
-
       # add msbuild and devenv to the PATH variable
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1

@@ -17,7 +17,7 @@ env:
   ENDUSER_INSTALLER_FILE_NAME: DTSC.msi
 jobs:
   build-release-binaries:
-    runs-on: windows-latest
+    runs-on: windows-2019
     outputs:
       build-type: ${{ steps.get-build-type.outputs.build-type }}
       installer-filename: ${{ steps.get-installer-filename.outputs.installer-filename }}

@@ -45,12 +45,16 @@ jobs:
           echo "Upload release artifacts to ${{ steps.create-tag-release.outputs.upload_url }}"
 
   prepare-upload-asset:
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: [create-release]
     steps:
       # get the latest code from the repo
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 4.5
 
       # add msbuild and devenv to the PATH variable
       - name: Setup MSBuild
